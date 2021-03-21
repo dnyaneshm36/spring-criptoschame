@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<springboot2-postgresql-jpa-hibernate-crud-example>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "net.guides.springboot2.crud.Application",
+            "projectName": "springboot2-postgresql-jpa-hibernate-crud-example",
+            "args": ""
+        }
+    ]
+}
