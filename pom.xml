@@ -46,6 +46,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.github.zhangzhongjun/BilinearMapAccumulator -->
+		<!-- https://mvnrepository.com/artifact/com.github.zhangzhongjun/BilinearMapAccumulator/0.1 -->
+		<dependency>
+			<groupId>com.github.zhangzhongjun</groupId>
+			<artifactId>BilinearMapAccumulator</artifactId>
+			<version>0.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

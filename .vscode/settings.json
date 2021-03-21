@@ -3,8 +3,13 @@
     "java.dependency.packagePresentation": "flat",
     "java.dependency.syncWithFolderExplorer": false,
     "maven.view": "hierarchical",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "/home/dm/Downloads/march/japva pbc/jars/jpbc-api-2.0.0.jar"
-    ]
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar"
+        ],
+        "exclude": [
+            "/home/dm/Downloads/march/japva pbc/jars/jpbc-plaf-2.0.0.jar",
+            "/home/dm/Downloads/march/japva pbc/jars/jpbc-api-2.0.0.jar"
+        ]
+    }
 }
