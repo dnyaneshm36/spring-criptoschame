@@ -1,6 +1,6 @@
-mvn deploy:deploy-file -DgroupId=jpbc  -DardifactId=api -Dversion=2.0.0  -Durl=file:./libs -DrepositoryId=libs 
--DupdateReleaseInfo=true 
--Dfile=/home/dm/javaproject/crudjdbc/jpbc-api-2.0.0.jar
+mvn deploy:deploy-file  -Dfile=/home/dm/javaproject/crudjdbc/src/libs/jpbc-api-2.0.0.jar \
+-DgroupId=it.unisa.dia.gas -DartifactId=jpbc-api -Dversion=2.0.0  -Durl=file:./libs -DrepositoryId=libs \
+-DupdateReleaseInfo=true  
 
 
 mvn install:install-file \
