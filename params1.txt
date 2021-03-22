@@ -1,0 +1,8 @@
+type a
+q 779879
+r 67
+h 11640
+exp1 1
+exp2 6
+sign0 1
+sign1 1
