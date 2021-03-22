@@ -6,6 +6,7 @@ import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
+import com.dnyanesh.learn.crudjdbc.model.SetupParamter;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,18 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+
 @RestController
 @RequestMapping("/api/pbc")
 public class JpbcCheckController {
   
-	
-	@GetMapping("/home")
+    @GetMapping("/home")
 	public String home(){
 		return "this my pbc jpbc home";
 	}
 
-	@GetMapping(value = "/param",  produces = "application/json")
-	public String getAllparam() {
+	@GetMapping(value = "/setup",  produces = "application/json")
+	public String getSetupParam() {
 
 		
 
@@ -34,35 +35,17 @@ public class JpbcCheckController {
         //use pbc wrapper
         PairingFactory.getInstance().setUsePBCWhenPossible(true);
         
+        
+        Element P = pairing.getG1().newRandomElement();
+        Element master_key_lamda = pairing.getZr().newRandomElement();
+        Element PKs = P.mulZn(master_key_lamda);
+        Element SKs = master_key_lamda.duplicate();
+        SetupParamter r = new SetupParamter(P,master_key_lamda,PKs,SKs) ;
 
+        // System.out.println("  object "+r.toString());
 
-
-
-    Element P = pairing.getG1().newRandomElement();
-    System.out.println("P------------is "+P);
-    Element Q = pairing.getG1().newRandomElement();
-    Element R = P.add( Q);
-    
-    
-    //KeyGen-Server
-
-    //sks = a; pks. =(A,B)
-
-     long KeyGen_server_start = System.currentTimeMillis();
-
-     Element a = pairing.getZr().newRandomElement(); //sks
-
-
-         
-         System.out.println("P------------is "+P);
-         System.out.println("Q------------is "+Q);
-         System.out.println("R------------is "+R);
-         System.out.println("A------------is "+a);
-
-		 String ans=" P : [ "+ P +" ]"+
-		 " , Q : [ "+Q+" ]     --element_t  in java";
-         
-         return ans;
+        return r.toString();
+  
 	}
 
 	
