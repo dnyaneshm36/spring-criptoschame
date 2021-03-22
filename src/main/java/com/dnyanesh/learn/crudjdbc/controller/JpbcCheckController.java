@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/pbc")
 public class JpbcCheckController {
 
-
+    private String response;
 	
 	@GetMapping("/home")
 	public String home(){
@@ -62,7 +62,8 @@ public class JpbcCheckController {
 		 String ans="{--- P : [ "+ P +" ]"+
 		 "Q : [ "+Q+" ]"+
 		 "----}";
-		 return ans;
+         this.response= ans;
+		 return this.response;
 	}
 
 	
