@@ -19,6 +19,11 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
 public class JpbcCheckController {
 
 
+	
+	@GetMapping("/home")
+	public String home(){
+		return "this my pbc jpbc home";
+	}
 
 	@GetMapping("/param")
 	public String getAllparam() {
@@ -54,7 +59,7 @@ public class JpbcCheckController {
     System.out.println("P------------is "+P);
     Element Q = pairing.getG1().newRandomElement();
     Element R = P.add( Q);
-    int j = 1;
+    
     
     //KeyGen-Server
 
