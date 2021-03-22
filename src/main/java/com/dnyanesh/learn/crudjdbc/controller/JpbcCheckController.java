@@ -30,7 +30,7 @@ public class JpbcCheckController {
 		
 
         //Implamenting the pairing   
-
+        long KeyGen_server_start = System.currentTimeMillis();
         Pairing pairing = PairingFactory.getPairing("params1.txt"); 
         //use pbc wrapper
         PairingFactory.getInstance().setUsePBCWhenPossible(true);
@@ -44,8 +44,9 @@ public class JpbcCheckController {
         SetupParamter r = new SetupParamter(P,master_key_lamda,PKs,SKs) ;
 
         // System.out.println("  object "+r.toString());
-
-        return r.toString();
+        long KeyGen_server_end = System.currentTimeMillis();
+        
+        return r.toString()+" \n Time required to genrate = "+ (KeyGen_server_end-KeyGen_server_start);
   
 	}
 

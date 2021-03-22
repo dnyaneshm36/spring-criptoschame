@@ -42,8 +42,8 @@ public class SetupParamter {
         }
         @Override
         public String toString() {
-            return "SetupParamters: \n { P= [ " + P + " ] , master_key_lamda= [ " + master_key_lamda+ " ] , PKc= [ " + PKc + " ] , SKc= [ " + SKc + 
-                     " ] }";
+            return "SetupParamters: \n { \nP= [ " + P + " ] , \nmaster_key_lamda= [ " + master_key_lamda+ " ] , \nPKc= [ " + PKc + " ] , \nSKc= [ " + SKc + 
+                     " ] \n}";
         }
         
     
