@@ -60,7 +60,7 @@ public class JpbcCheckController {
          System.out.println("A------------is "+a);
 
 		 String ans=" P : [ "+ P +" ]"+
-		 " , Q : [ "+Q+" ]     --element in java";
+		 " , Q : [ "+Q+" ]     --element_t  in java";
          
          return ans;
 	}
