@@ -38,7 +38,8 @@ public class JpbcCheckController {
         
         Element P = pairing.getG1().newRandomElement();
         Element master_key_lamda = pairing.getZr().newRandomElement();
-        Element PKs = P.mulZn(master_key_lamda);
+        Element PKs = P.duplicate();
+        PKs.mulZn(master_key_lamda);
         Element SKs = master_key_lamda.duplicate();
         SetupParamter r = new SetupParamter(P,master_key_lamda,PKs,SKs) ;
 
