@@ -9,21 +9,21 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
 @RequestMapping("/api/pbc")
 public class JpbcCheckController {
-
-    private String response;
+  
 	
 	@GetMapping("/home")
 	public String home(){
 		return "this my pbc jpbc home";
 	}
 
-	@GetMapping("/param")
+	@GetMapping(value = "/param",  produces = "application/json")
 	public String getAllparam() {
 
 		
@@ -59,11 +59,10 @@ public class JpbcCheckController {
          System.out.println("R------------is "+R);
          System.out.println("A------------is "+a);
 
-		 String ans="{--- P : [ "+ P +" ]"+
-		 "Q : [ "+Q+" ]"+
-		 "----}";
-         this.response= ans;
-		 return this.response;
+		 String ans=" P : [ "+ P +" ]"+
+		 " , Q : [ "+Q+" ]     --element in java";
+         
+         return ans;
 	}
 
 	
