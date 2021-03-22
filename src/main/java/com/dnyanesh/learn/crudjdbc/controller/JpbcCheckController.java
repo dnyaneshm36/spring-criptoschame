@@ -46,8 +46,11 @@ public class JpbcCheckController {
         // System.out.println("  object "+r.toString());
         long KeyGen_server_end = System.currentTimeMillis();
         
-        return r.toString()+" \n Time required to genrate = "+ (KeyGen_server_end-KeyGen_server_start);
-  
+         return r.toString()+" \n Time required to genrate = "+ (KeyGen_server_end-KeyGen_server_start);
+        // String content = "{"id":1,"name":"ram"}";
+        //     Gson gson = new Gson();    
+        //     return gson.toJson(content); 
+            
 	}
 
 	
