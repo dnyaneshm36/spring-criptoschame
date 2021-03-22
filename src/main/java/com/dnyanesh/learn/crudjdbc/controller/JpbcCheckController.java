@@ -1,14 +1,10 @@
 package com.dnyanesh.learn.crudjdbc.controller;
 
 
-import java.io.FileWriter;
-import java.io.IOException;
+
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
-import it.unisa.dia.gas.jpbc.PairingParameters;
-import it.unisa.dia.gas.jpbc.PairingParametersGenerator;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
-import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
 
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,23 +26,7 @@ public class JpbcCheckController {
 	@GetMapping("/param")
 	public String getAllparam() {
 
-		int rBits = 7;
-        int qBits = 20;
-        PairingParametersGenerator pg = new TypeACurveGenerator(rBits, qBits);
-        PairingParameters params = pg.generate();
-
-        try {
-            FileWriter fw = new FileWriter("params1.txt");
-            String paramsStr = params.toString();
-            fw.write(paramsStr);
-            fw.flush();
-            fw.close();
-
-        } catch (IOException e) {
-            System.out.println("the we get problem in writering ");
-            e.printStackTrace();
-        }
-
+		
 
         //Implamenting the pairing   
 
