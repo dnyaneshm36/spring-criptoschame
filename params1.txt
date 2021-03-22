@@ -1,8 +1,8 @@
 type a
-q 188483
-r 113
-h 1668
-exp1 4
+q 862583
+r 127
+h 6792
+exp1 1
 exp2 7
 sign0 1
 sign1 -1
