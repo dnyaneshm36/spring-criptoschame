@@ -17,10 +17,12 @@ public class Employee {
 	private String emailId;
 	
 	public Employee() {
-		
+		super();
 	}
 	
 	public Employee(String firstName, String lastName, String emailId) {
+		super();
+		
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailId = emailId;

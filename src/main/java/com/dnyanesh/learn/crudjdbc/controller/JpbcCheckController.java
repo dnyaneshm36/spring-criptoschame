@@ -8,6 +8,7 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
 import com.dnyanesh.learn.crudjdbc.model.SetupParamter;
 
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -41,16 +42,21 @@ public class JpbcCheckController {
         Element PKs = P.duplicate();
         PKs.mulZn(master_key_lamda);
         Element SKs = master_key_lamda.duplicate();
-        SetupParamter r = new SetupParamter(P,master_key_lamda,PKs,SKs) ;
-
-        // System.out.println("  object "+r.toString());
         long KeyGen_server_end = System.currentTimeMillis();
+        SetupParamter r = new SetupParamter(P,master_key_lamda,PKs,SKs,(KeyGen_server_end-KeyGen_server_start)) ;
+
+         System.out.println("  object "+r.toString());
         
-         return r.toString()+" \n Time required to genrate = "+ (KeyGen_server_end-KeyGen_server_start);
+         System.out.println("--------------  object "+r);
+         
+
         // String content = "{"id":1,"name":"ram"}";
-        //     Gson gson = new Gson();    
-        //     return gson.toJson(content); 
-            
+            // Gson gson = new Gson();    
+            // String jsobog =  gson.toJson(r); 
+            // System.out.println("-----**********??????json poject"+ jsobog);
+
+           
+            return r.toString();
 	}
 
 	

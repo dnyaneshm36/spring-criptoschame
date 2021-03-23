@@ -8,11 +8,13 @@ public class SetupParamter {
         Element master_key_lamda;
         Element PKc;
         Element SKc;
-        public SetupParamter(Element p, Element master_key_lamda, Element pKc, Element sKc) {
+        long  time;
+        public SetupParamter(Element p, Element master_key_lamda, Element pKc, Element sKc,long time) {
             this.P = p.duplicate();
             this.master_key_lamda = master_key_lamda.duplicate();
             this.PKc = pKc.duplicate();
             this.SKc = sKc.duplicate();
+            this.time = time;
         }
         public SetupParamter() {
         }
@@ -43,7 +45,13 @@ public class SetupParamter {
         @Override
         public String toString() {
             return "SetupParamters: \n { \nP = [ " + P + " ] , \nmaster_key_lamda = [ " + master_key_lamda+ " ] , \nPKc = [ " + PKc + " ] , \nSKc = [ " + SKc + 
-                     " ] \n}";
+                " ] , "+"\n Time required to generate = " + time + "\n}";
+        }
+        public long getTime() {
+            return time;
+        }
+        public void setTime(long time) {
+            this.time = time;
         }
         
     
