@@ -10,6 +10,7 @@ public class SetupParamter {
         Element SKc;
         long  time;
         public SetupParamter(Element p, Element master_key_lamda, Element pKc, Element sKc,long time) {
+            super();
             this.P = p.duplicate();
             this.master_key_lamda = master_key_lamda.duplicate();
             this.PKc = pKc.duplicate();
@@ -17,6 +18,7 @@ public class SetupParamter {
             this.time = time;
         }
         public SetupParamter() {
+            super();
         }
         public Element getP() {
             return P;
