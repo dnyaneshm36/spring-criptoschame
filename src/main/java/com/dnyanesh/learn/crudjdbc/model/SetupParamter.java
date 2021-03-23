@@ -47,7 +47,7 @@ public class SetupParamter {
         @Override
         public String toString() {
             return "SetupParamters: \n { \nP = [ " + P + " ] , \nmaster_key_lamda = [ " + master_key_lamda+ " ] , \nPKc = [ " + PKc + " ] , \nSKc = [ " + SKc + 
-                " ] , "+"\n Time required to generate = " + time + "\n}";
+                " ] , "+"\n Time required to generate = " + time + "(milli second)\n}";
         }
         public long getTime() {
             return time;
