@@ -3,6 +3,7 @@ package com.dnyanesh.learn.crudjdbc.controller;
 
 
 import it.unisa.dia.gas.jpbc.Element;
+import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
@@ -11,9 +12,10 @@ import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.util.Scanner;
 
+import com.dnyanesh.learn.crudjdbc.model.CipherWord;
 import com.dnyanesh.learn.crudjdbc.model.ClientKey;
 import com.dnyanesh.learn.crudjdbc.model.SetupParamter;
-
+import com.dnyanesh.learn.crudjdbc.model.TrapdoorWord;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,6 +73,17 @@ public class JpbcCheckController {
         //use pbc wrapper
         PairingFactory.getInstance().setUsePBCWhenPossible(true);
         
+        /* Return Zr */
+        Field Zr = pairing.getZr();
+
+        // /* Return G1 */
+        // Field G1 = pairing.getG1();
+
+        // /* Return G2 */
+        // Field G2 = pairing.getG2();
+
+        // /* Return GT */
+        // Field GT = pairing.getGT();
         
         Element P = pairing.getG1().newRandomElement();
         Element master_key_lamda = pairing.getZr().newRandomElement();
@@ -150,6 +163,9 @@ public class JpbcCheckController {
         // CLPKES
 
         //checking pair is equal.
+
+        time_generater_key_start  = System.currentTimeMillis();
+
         Element pair_sender_PKc,pair_sender_P;
         // System.out.println("pku1    "+sender.getPKu1());
         // System.out.println("PKC   "+  r.getPKc() );
@@ -187,7 +203,7 @@ public class JpbcCheckController {
         Element Ri;
         Ri = pairing.getZr().newRandomElement();
 
-        // Element Ti,pair1,pair2,pair3,first,hash3_word;
+        
         String data = "";
 
         try {
@@ -207,13 +223,141 @@ public class JpbcCheckController {
           String str = data;
           BigInteger q = new BigInteger(str);
           BigInteger rethash = hash2_asscii(word, q);
-          
+          Element hash = Zr.newElement(rethash);
           System.out.println("returl val "+rethash);
+          System.out.println("returl val hash---- "+hash);
+          Element first = receiver.getQu().duplicate();
+          first.mulZn(hash);
+          first.mulZn(Ri);
+          Element pair1 = pairing.pairing( first , receiver.getPKu2() );
+          Element QsRi = sender.getQu().duplicate();
+          QsRi.mulZn(Ri);    
+          Element pair2 = pairing.pairing( QsRi , receiver.getPKu2() );
+          
+          byte [] wordByte = word.getBytes();
+          Element hash3_word = pairing.getG1().newElement().setFromHash(wordByte, 0, wordByte.length);
+          hash3_word.mulZn(Ri);
+          Element pair3 = pairing.pairing( hash3_word , r.getP() );
 
+          Element Ti = pair1.duplicate();
+          Ti.mul(pair2);
+          Ti.mul(pair3);
+
+          byte [ ] byteVi = Ti.toBytes();
+          Element Ui =  r.getP().duplicate();
+          Ui.mulZn(Ri);
+          BigInteger Vi = new BigInteger(byteVi);
+          CipherWord cipherword = new CipherWord(Ui,Vi);
+
+          time_generater_key_end  = System.currentTimeMillis();
+
+          cipherword.setRequiredTime((time_generater_key_end-time_generater_key_start));
+
+          // Trapdoor()
+
+          time_generater_key_start  = System.currentTimeMillis();
+
+
+          Element T1 = r.getP().duplicate();
+          T1.mulZn(r.getMaster_key_lamda());
+          Element H2wSKR = receiver.getSKu2().duplicate();
+          H2wSKR.mulZn(hash);
+          Element lambdaPKs = sender.getPKu1() ;
+          lambdaPKs.mulZn(r.getMaster_key_lamda());
+
+          byte [] H2wSKRByte = H2wSKR.toBytes();
+        //   Element e = pairing.getG1().newElement();
+        //   int bythread = e.setFromBytes(H2wSKRByte);
+        //   System.out.println("e--- "+e);
+        //   System.out.println("H2wSKR--- "+H2wSKR);
+          byte [] lambdaPKsByte = lambdaPKs.toBytes();
+          int lenFinal = Math.max(H2wSKRByte.length, lambdaPKsByte.length);
+          byte[] array = new byte[lenFinal];
+          for( int  i = 0 ; i < lenFinal ; i++ )
+          {
+              int x = (int) H2wSKRByte[i] ^ (int) lambdaPKsByte[i];
+              array[i] = (byte)x;
+          }
+          Element T2 = pairing.getG1().newElement();
+          int bythread = T2.setFromBytes(array);
+          byte [] wordByte2 = word.getBytes();
+          Element hash3_word2 = pairing.getG1().newElement().setFromHash(wordByte2, 0, wordByte2.length);
+          byte [] hash3WordByte = hash3_word2.toBytes();
+          lenFinal = Math.max(hash3WordByte.length, lambdaPKsByte.length);
+          array = new byte[lenFinal];
+          for( int  i = 0 ; i < lenFinal ; i++ )
+          {
+              int x = (int) hash3WordByte[i] ^ (int) lambdaPKsByte[i];
+              array[i] = (byte)x;
+          }
+          Element T3 = pairing.getG1().newElement();
+          bythread = T3.setFromBytes(array);
+
+          TrapdoorWord wordSearch = new TrapdoorWord();
+          wordSearch.setT1(T1);
+          wordSearch.setT2(T2);
+          wordSearch.setT3(T3);
+          time_generater_key_end  = System.currentTimeMillis();
+
+          wordSearch.setRequiredTime((time_generater_key_end-time_generater_key_start));
+  
+          // TEST()
+
+          Element SKsT1 = wordSearch.getT1().duplicate();
+          SKsT1.mulZn(sender.getSKu1());
+          byte [] SKsT1byte = SKsT1.toBytes();
+          byte [] T2byte = wordSearch.getT2().toBytes();
+          byte [] T3byte = wordSearch.getT3().toBytes();
+
+          lenFinal = Math.max(T2byte.length, SKsT1byte.length);
+          byte [] T2dashbyte = new byte[lenFinal];
+          for( int  i = 0 ; i < lenFinal ; i++ )
+          {
+              int x = (int) T2byte[i] ^ (int) SKsT1byte[i];
+              T2dashbyte[i] = (byte)x;
+          }
+
+          lenFinal = Math.max(T3byte.length, SKsT1byte.length);
+          byte [] T3dashbyte = new byte[lenFinal];
+          for( int  i = 0 ; i < lenFinal ; i++ )
+          {
+              int x = (int) T3byte[i] ^ (int) SKsT1byte[i];
+              T3dashbyte[i] = (byte)x;
+          }
+          Element T2dash = pairing.getG1().newElement().setFromHash(T2dashbyte, 0, T2dashbyte.length);
+          Element T3dash = pairing.getG1().newElement().setFromHash(T3dashbyte, 0, T2dashbyte.length);
+          Element firstElementPair = T2dash.duplicate();
+          firstElementPair.add(sender.getSKu2());
+          firstElementPair.add(T3dash);
+          Element hash4pair =  pairing.pairing(firstElementPair, cipherword.getUi());
+          
+          byte [ ] hash4pairbyte = hash4pair.toBytes();
+  
+          BigInteger hash4pairbig = new BigInteger(hash4pairbyte);
+          String equality;
+          if( hash4pairbyte.equals(byteVi) )
+          {
+              System.out.println("\nYes !!! \nsuccessfully  find the word\n");
+              equality="\nYes !!! \nsuccessfully  find the word\n";
+          }
+          else
+          {
+                System.out.println("\n oh No oh NO oh No !!! \nsuccessfully didn't find  the word\n");
+                equality = "\n oh No oh NO oh No !!! \nsuccessfully didn't find  the word\n";
+          }
+        //   System.out.println(" hash4pairbig  q--- "+hash4pairbig);
+        //   System.out.println("cipherword.getVi()--- "+cipherword.getVi());
+        //   System.out.println("word tarpdoor q--- \n"+wordSearch);
+          
+        //   System.out.println("word q--- \n"+cipherword);
         String ret;
         ret = r.toString();
         ret +=" \n sender key------------- \n\n"+sender.toString();
         ret +=" \n receiver key------------- \n\n"+receiver.toString();
+        ret +=" \n cipher of word ------------- \n\n"+cipherword.toString();
+        ret +=" \n Trapdoor of word ------------- \n\n"+wordSearch.toString();
+        ret += "\n Checking Trapdoor gives same reasult or not \n\n";
+        ret += equality ;
             return ret;
 	}
 
