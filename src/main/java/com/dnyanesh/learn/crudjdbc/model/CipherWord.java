@@ -8,6 +8,7 @@ public class CipherWord {
 
         Element Ui;
         BigInteger Vi;
+        long requiredTime;
         public CipherWord(Element ui, BigInteger vi) {
             super();
             this.Ui = ui.duplicate();
@@ -28,9 +29,15 @@ public class CipherWord {
         public void setVi(BigInteger vi) {
             Vi = vi;
         }
+        public long getRequiredTime() {
+            return requiredTime;
+        }
+        public void setRequiredTime(long requiredTime) {
+            this.requiredTime = requiredTime;
+        }
         @Override
         public String toString() {
-            return "CipherWord [Ui=" + Ui + ", Vi=" + Vi + "]";
+            return "CipherWord: \n{ \n  Ui = [ " + Ui + " ] , \n  Vi = [ " + Vi + " ] , \n  requiredTime = "+requiredTime+"\n}\n";
         }
         
 }

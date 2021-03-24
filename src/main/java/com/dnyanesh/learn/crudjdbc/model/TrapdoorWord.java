@@ -8,6 +8,7 @@ public class TrapdoorWord {
         Element T3;
         String stringT2;
         String stringT3;
+        long requiredTime;
         public TrapdoorWord(Element t1, Element t2, Element t3, String stringT2, String stringT3) {
             super();
             this.T1 = t1.duplicate();
@@ -49,10 +50,16 @@ public class TrapdoorWord {
         public void setStringT3(String stringT3) {
             this.stringT3 = stringT3;
         }
+        public long getRequiredTime() {
+            return requiredTime;
+        }
+        public void setRequiredTime(long requiredTime) {
+            this.requiredTime = requiredTime;
+        }
         @Override
         public String toString() {
-            return "TrapdoorWord [T1=" + T1 + ", T2=" + T2 + ", T3=" + T3 + ", stringT2=" + stringT2 + ", stringT3="
-                    + stringT3 + "]";
+            return "TrapdoorWord: \n{ \n  T1 = [ " + T1 + " ] , \n  T2 = [ " + T2 + " ] , \n  T3 = [ " + T3 + " ] , \n  requiredTime = " + requiredTime
+                    + " , \n stringT2=" + stringT2 + ", stringT3=" + stringT3 + "\n}";
         }
         
         
