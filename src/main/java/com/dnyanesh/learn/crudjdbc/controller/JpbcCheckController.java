@@ -117,7 +117,7 @@ public class JpbcCheckController {
         SetupParamter r = new SetupParamter(P,master_key_lamda,PKc,SKs,(KeyGen_server_end-KeyGen_server_start)) ;
         
         
-        System.out.println("--------------  object "+r);
+        // System.out.println("--------------  object "+r);
          
         
         long  time_generater_key_start  = System.currentTimeMillis();
@@ -134,24 +134,17 @@ public class JpbcCheckController {
         Element Sus = pairing.getZr().newRandomElement(); //clent id
         Element SKu1s = Sus.duplicate();
         Element SKu2s = Dus.duplicate();
-        SKu2s.mulZn(Sus);
+        SKu2s.mulZn(Sus);   
 
         Element PKu1s = r.getP().duplicate();
-        System.out.println("pku1s   1  "+PKu1s);
         PKu1s.mulZn(Sus);
-        System.out.println("pku1s   2  "+PKu1s);
-
         Element PKu2s = r.getPKc().duplicate();
-        System.out.println("PKu2s   3  "+PKu2s);
-        PKu2s.mulZn(Sus);
-        System.out.println("PKu2s   4  "+PKu2s);
-        
+        PKu2s.mulZn(Sus);      
         sender.setPKu1(PKu1s);
         sender.setPKu2(PKu2s);
         sender.setSKu1(SKu1s);
         sender.setSKu2(SKu2s);
         sender.setSu(Sus);
-        System.out.println("server   4  "+sender.toString());
         long  time_generater_key_end  = System.currentTimeMillis();
         
         sender.setRequredTime((time_generater_key_end-time_generater_key_start));
@@ -251,8 +244,6 @@ public class JpbcCheckController {
           BigInteger q = new BigInteger(str);
           BigInteger rethash = hash2_asscii(word, q);
           Element hash = Zr.newElement(rethash);
-          System.out.println("returl val "+rethash);
-          System.out.println("returl val hash---- "+hash);
           Element first = receiver.getQu().duplicate();
           first.mulZn(hash);
           first.mulZn(Ri);
@@ -290,9 +281,9 @@ public class JpbcCheckController {
           Element H2wSKR = receiver.getSKu2().duplicate();
           H2wSKR.mulZn(hash);
           Element lambdaPKs = sender.getPKu1().duplicate() ;
-          System.out.println("lamsdf "+lambdaPKs);
+        //   System.out.println("lamsdf  H2wSKR  t2 -dash-"+H2wSKR);
           lambdaPKs.mulZn(r.getMaster_key_lamda());
-          System.out.println("lamsdf  2 "+lambdaPKs);
+        //  System.out.println("lamsdf  2 "+lambdaPKs);
           byte [] H2wSKRByte = H2wSKR.toBytes();
         //   Element e = pairing.getG1().newElement();
         //   int bythread = e.setFromBytes(H2wSKRByte);
@@ -300,24 +291,34 @@ public class JpbcCheckController {
         //   System.out.println("H2wSKR--- "+H2wSKR);
           byte [] lambdaPKsByte = lambdaPKs.toBytes();
           int lenFinal = Math.max(H2wSKRByte.length, lambdaPKsByte.length);
-          byte[] T2bytexor = new byte[lenFinal];
+          int[] T2intxor = new int[lenFinal];
           for( int  i = 0 ; i < lenFinal ; i++ )
           {
               int x = (int) H2wSKRByte[i] ^ (int) lambdaPKsByte[i];
-              T2bytexor[i] = (byte)x;
+              T2intxor[i] = x;
           }
-        
+          byte[] T2bytexor = new byte[lenFinal];
+          for( int  i = 0 ; i < lenFinal ; i++ )
+          {
+            T2bytexor[i] = (byte) T2intxor[i] ;
+          }
           Element T2 = pairing.getG1().newElement();
           int bythread = T2.setFromBytes(T2bytexor);
           byte [] wordByte2 = word.getBytes();
           Element hash3_word2 = pairing.getG1().newElement().setFromHash(wordByte2, 0, wordByte2.length);
+         // System.out.println("hash3_word2 should be equal to t3 dash "+hash3_word2);
           byte [] hash3WordByte = hash3_word2.toBytes();
           lenFinal = Math.max(hash3WordByte.length, lambdaPKsByte.length);
-          byte [] T3bytexor = new byte[lenFinal];
+          int[] T3intxor = new int[lenFinal];
           for( int  i = 0 ; i < lenFinal ; i++ )
           {
               int x = (int) hash3WordByte[i] ^ (int) lambdaPKsByte[i];
-              T3bytexor[i] = (byte)x;
+              T3intxor[i] = (byte)x;
+          }
+          byte[] T3bytexor = new byte[lenFinal];
+          for( int  i = 0 ; i < lenFinal ; i++ )
+          {
+            T3bytexor[i] = (byte) T3intxor[i] ;
           }
           Element T3 = pairing.getG1().newElement();
           bythread = T3.setFromBytes(T3bytexor);
@@ -336,34 +337,56 @@ public class JpbcCheckController {
           byte [] SKsT1byte = SKsT1.toBytes();
           byte [] T2byte = wordSearch.getT2().toBytes();
           byte [] T3byte = wordSearch.getT3().toBytes();
-
+        //   int [] T2byte = T2bytexor;
+        //   int [] T3byte = T3bytexor;
           lenFinal = Math.max(T2byte.length, SKsT1byte.length);
-          byte [] T2dashbyte = new byte[lenFinal];
+          int [] T2dashbyte = new int[lenFinal];
           for( int  i = 0 ; i < lenFinal ; i++ )
           {
               int x = (int) T2byte[i] ^ (int) SKsT1byte[i];
-              T2dashbyte[i] = (byte)x;
+              T2dashbyte[i] = x;
           }
 
           lenFinal = Math.max(T3byte.length, SKsT1byte.length);
-          byte [] T3dashbyte = new byte[lenFinal];
+          int [] T3dashbyte = new int[lenFinal];
           for( int  i = 0 ; i < lenFinal ; i++ )
           {
               int x = (int) T3byte[i] ^ (int) SKsT1byte[i];
-              T3dashbyte[i] = (byte)x;
+              T3dashbyte[i] = x;
           }
-          Element T2dash = pairing.getG1().newElement().setFromHash(T2dashbyte, 0, T2dashbyte.length);
-          Element T3dash = pairing.getG1().newElement().setFromHash(T3dashbyte, 0, T2dashbyte.length);
+
+          byte [] T2dashintobyte = new byte[T2dashbyte.length];
+          for ( int i = 0 ; i < T2dashbyte.length ; i++)
+          {
+                T2dashintobyte[i] = (byte)T2dashbyte[i];
+          }       
+          byte [] T3dashintobyte = new byte[T3dashbyte.length];
+          for ( int i = 0 ; i < T2dashbyte.length ; i++)
+          {
+                T3dashintobyte[i] = (byte)T3dashbyte[i];
+          } 
+          Element T2dash = pairing.getG1().newElement();
+          int a = T2dash.setFromBytes(T2dashintobyte);
+          Element T3dash = pairing.getG1().newElement();
+          a = T3dash.setFromBytes(T3dashintobyte);
+          
+        //   Element T2dash = H2wSKR.duplicate();
+        //   Element T3dash = hash3_word2.duplicate();
+        //   System.out.println(" -----------T2dash --- "+ T2dash);
+        //   System.out.println(" -----------T3dash --- "+ T3dash);
           Element firstElementPair = T2dash.duplicate();
-          firstElementPair.add(sender.getSKu2());
+        //   System.out.println("firstElementPair "+firstElementPair);
+          firstElementPair.add(sender.getSKu2()); 
+        //   System.out.println("firstElementPair  1  "+firstElementPair);
           firstElementPair.add(T3dash);
+        //   System.out.println("firstElementPair 2  "+firstElementPair);
           Element hash4pair =  pairing.pairing(firstElementPair, cipherword.getUi());
           
           byte [ ] hash4pairbyte = hash4pair.toBytes();
   
           BigInteger hash4pairbig = new BigInteger(hash4pairbyte);
           String equality;
-          if( hash4pairbyte.equals(byteVi) )
+          if( hash4pairbig.equals(Vi) )
           {
               System.out.println("\nYes !!! \nsuccessfully  find the word\n");
               equality="\nYes !!! \nsuccessfully  find the word\n"+"\n hash4pairbig  : "+hash4pairbig+"\n Vi()          : "+cipherword.getVi();
@@ -375,9 +398,9 @@ public class JpbcCheckController {
           }
           System.out.println(" hash4pairbig  q--- "+hash4pairbig);
           System.out.println("cipherword.getVi()--- "+cipherword.getVi());
-          System.out.println("word tarpdoor q--- \n"+wordSearch);
+          System.out.println("word tarpdoor --- \n"+wordSearch);
           
-          System.out.println("word q--- \n"+cipherword);
+          System.out.println("word --- \n"+cipherword);
 
         String ret;
         ret = r.toString();

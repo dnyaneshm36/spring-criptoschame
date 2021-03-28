@@ -113,7 +113,7 @@ public class scfMPKESScheme {
 
                     Element D1_MPEKS = pC.pairing(H_w1_MPEKS).powZn(t_MPEKS);
                     Element D2_MPEKS = pC.pairing(H_w2_MPEKS).powZn(t_MPEKS);
-                    Element D3_MPEKS = pC.pairing(H_w3_MPEKS). powZn(t_MPEKS);
+                    Element D3_MPEKS = pC.pairing(H_w3_MPEKS).powZn(t_MPEKS);
                     //System.out.println("D3_MPEKS: + D3_MPEKS);
 
                 //System.out.println("D1_MPEKS: " + 01_MPEKS); 
@@ -121,7 +121,7 @@ public class scfMPKESScheme {
 
                 //N1, N2, N3
 
-                //Element D1 MPEG1 = D1_MPEKS. duplicate();
+                //Element D1 MPEG1 = D1_MPEKS.duplicate();
                 //Element D2_MPEKS1 = D2_MPEKS.duplicate();
                 //Element D3_MPEKS1 = D3_MPEKS.duplicate(); 
                 byte[] N1_MPEKS = D1_MPEKS.toBytes(); //N1 
@@ -157,7 +157,7 @@ public class scfMPKESScheme {
 
 
                 //e(A,B)^(t*+c)
-                Element tc = c. duplicate(); 
+                Element tc = c.duplicate(); 
                 tc.add(t_Trapdoor); //t*+c
                 Element T1_right = pA.pairing(B).powZn(tc); //e(A,B)^Ct++c) 
                     //System.out.println("T1 right " + T1_right);
@@ -174,7 +174,7 @@ public class scfMPKESScheme {
                 byte[] tt1 = cHw1.toBytes();
                 byte[] tt2 = T1_right.toBytes();
                 int temp = 0;
-                if(tt1. length <= tt2.length) {
+                if(tt1.length <= tt2.length) {
                     temp = tt2.length;
                 } else {
                     temp = tt1.length;
