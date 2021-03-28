@@ -62,7 +62,7 @@ public class JpbcCheckController {
 		return "this my pbc jpbc home";
 	}
 
-	@GetMapping(value = "/demo",  produces = "application/json")
+	@GetMapping(value = "/democode",  produces = "application/json")
 	public String getSetupParam() {
 
         // int rBits = 7;
