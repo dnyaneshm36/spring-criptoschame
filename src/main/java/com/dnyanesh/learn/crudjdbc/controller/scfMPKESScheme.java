@@ -251,7 +251,7 @@ public class scfMPKESScheme {
                 String rel=" ";
                 System.out.println(" --- ");
                     System.out.println("--------------N1_MPEKS--------------");
-                    rel+=" ---  \n";
+                    rel+=" ---  DEMO --- \n replace word with below three OR not anythings else. \n";
                     rel+= w1_MPEKS;
                     rel+="  --------------N1_MPEKS-------------- [  ";
 
