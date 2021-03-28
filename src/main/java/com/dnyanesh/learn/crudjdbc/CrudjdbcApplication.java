@@ -2,16 +2,16 @@ package com.dnyanesh.learn.crudjdbc;
 
 
 
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class CrudjdbcApplication {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		System.out.println("hello world !!!!");
 		
+		//scfMPEKS.dnyanesh("other scheme");
 
 
 		SpringApplication.run(CrudjdbcApplication.class, args);

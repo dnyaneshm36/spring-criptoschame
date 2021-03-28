@@ -1,19 +1,17 @@
-import java.io.FileWriter;
-import java.io.IOException;
+package com.dnyanesh.learn.crudjdbc;
+
 import java.util.Arrays;
 
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
-import it.unisa.dia.gas.jpbc.PairingParameters;
-import it.unisa.dia.gas.jpbc.PairingParametersGenerator;
 import it.unisa.dia.gas.jpbc.PairingPreProcessing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
-import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
+
 
 
 public class scfMPEKS {
 
-        public static void main(String[] args) throws Exception{
+        public static void dnyanesh(String args) throws Exception{
             System.out.println("the dnyanesh ");
             // int rBits = 160;
             // int qBits = 512;
