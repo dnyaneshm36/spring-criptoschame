@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/api/pbc")
+@RequestMapping("/pbc/clpeks")
 public class JpbcCheckController {
     
     static BigInteger hash2_asscii(String str, BigInteger q)
@@ -62,7 +62,7 @@ public class JpbcCheckController {
 		return "this my pbc jpbc home";
 	}
 
-	@GetMapping(value = "/setup",  produces = "application/json")
+	@GetMapping(value = "/demo",  produces = "application/json")
 	public String getSetupParam() {
 
         // int rBits = 7;
@@ -366,9 +366,9 @@ public class JpbcCheckController {
                 T3dashintobyte[i] = (byte)T3dashbyte[i];
           } 
           Element T2dash = pairing.getG1().newElement();
-          int a = T2dash.setFromBytes(T2dashintobyte);
+          bythread = T2dash.setFromBytes(T2dashintobyte);
           Element T3dash = pairing.getG1().newElement();
-          a = T3dash.setFromBytes(T3dashintobyte);
+          bythread = T3dash.setFromBytes(T3dashintobyte);
           
         //   Element T2dash = H2wSKR.duplicate();
         //   Element T3dash = hash3_word2.duplicate();
