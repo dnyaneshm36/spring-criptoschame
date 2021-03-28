@@ -65,7 +65,30 @@ public class JpbcCheckController {
 	@GetMapping(value = "/setup",  produces = "application/json")
 	public String getSetupParam() {
 
-		
+        // int rBits = 7;
+        // int qBits = 20;
+        // PairingParametersGenerator pg = new TypeACurveGenerator(rBits, qBits);
+        // PairingParameters params = pg.generate();
+
+        // try {
+        //     FileWriter fw = new FileWriter("params1.txt");
+        //     String paramsStr = params.toString();
+        //     fw.write(paramsStr);
+        //     fw.flush();
+        //     fw.close();
+
+        // } catch (IOException e) {
+        //     System.out.println("the we get problem in writering ");
+        //     e.printStackTrace();
+        // }
+
+
+        // //Implamenting the pairing   
+
+        // Pairing pairing = PairingFactory.getPairing("params1.txt"); 
+        // //use pbc wrapper
+        // PairingFactory.getInstance().setUsePBCWhenPossible(true);
+
 
         //Implamenting the pairing   
         long KeyGen_server_start = System.currentTimeMillis();
@@ -108,23 +131,27 @@ public class JpbcCheckController {
 
         sender = new ClientKey(senderId,Qus , Dus);
         
-        Element Sus = pairing.getZr().newRandomElement();
+        Element Sus = pairing.getZr().newRandomElement(); //clent id
         Element SKu1s = Sus.duplicate();
         Element SKu2s = Dus.duplicate();
-        Dus.mulZn(Sus);
+        SKu2s.mulZn(Sus);
 
-        Element PKu1s = P.duplicate();
+        Element PKu1s = r.getP().duplicate();
+        System.out.println("pku1s   1  "+PKu1s);
         PKu1s.mulZn(Sus);
+        System.out.println("pku1s   2  "+PKu1s);
 
-        Element PKu2s = PKc.duplicate();
+        Element PKu2s = r.getPKc().duplicate();
+        System.out.println("PKu2s   3  "+PKu2s);
         PKu2s.mulZn(Sus);
-
+        System.out.println("PKu2s   4  "+PKu2s);
+        
         sender.setPKu1(PKu1s);
         sender.setPKu2(PKu2s);
         sender.setSKu1(SKu1s);
         sender.setSKu2(SKu2s);
         sender.setSu(Sus);
-
+        System.out.println("server   4  "+sender.toString());
         long  time_generater_key_end  = System.currentTimeMillis();
         
         sender.setRequredTime((time_generater_key_end-time_generater_key_start));
@@ -139,16 +166,16 @@ public class JpbcCheckController {
         Dur.mulZn(master_key_lamda);
         receiver = new ClientKey(receiverId, Qur, Dur);
 
-        Element Sur = pairing.getZr().newRandomElement();
+        Element Sur = pairing.getZr().newRandomElement();    //client secrete.
         Element SKu1r = Sur.duplicate();
         Element SKu2r = Dur.duplicate();
-        Dus.mulZn(Sur);
+        SKu2r.mulZn(Sur);
 
-        Element PKu1r = P.duplicate();
-        PKu1s.mulZn(Sur);
+        Element PKu1r = r.getP().duplicate();
+        PKu1r.mulZn(Sur);
 
-        Element PKu2r = PKc.duplicate();
-        PKu1s.mulZn(Sur);
+        Element PKu2r = r.getPKc().duplicate();
+        PKu2r.mulZn(Sur);
 
         receiver.setPKu1(PKu1r);
         receiver.setPKu2(PKu2r);
@@ -176,11 +203,11 @@ public class JpbcCheckController {
 
         if( pair_sender_PKc.isEqual(pair_sender_P) )
 		{
-			System.out.println("Pairing equal for sender"+pair_sender_P+" \n - "+pair_sender_PKc+" \n");
+			System.out.println("\nPairing equal for receiver ");
 		}
 		else
 		{
-			System.out.println("fail turn ⊥ and about\n"+pair_sender_P+" \n - "+pair_sender_PKc+" \n");
+			System.out.println("\nfail turn ⊥ and about\n");
 		}
 
         //checking pair is equal.
@@ -192,11 +219,11 @@ public class JpbcCheckController {
 
         if( pair_receiver_PKc.isEqual(pair_receiver_P) )
 		{
-			System.out.println("\nPairing equal for receiver "+pair_sender_P+" \n - "+pair_sender_PKc+" \n");
+			System.out.println("\nPairing equal for receiver ");
 		}
 		else
 		{
-			System.out.println("fail turn ⊥ and about\n"+pair_sender_P+" \n - "+pair_sender_PKc+" \n");
+			System.out.println("\nfail turn ⊥ and about\n");
 		}
 
         String word = "wordto_encrption";
@@ -206,7 +233,7 @@ public class JpbcCheckController {
         
         String data = "";
 
-        try {
+        try {                 // taking q from param
             File myObj = new File("params1.txt");
             Scanner myReader = new Scanner(myObj);
 
@@ -232,11 +259,12 @@ public class JpbcCheckController {
           Element pair1 = pairing.pairing( first , receiver.getPKu2() );
           Element QsRi = sender.getQu().duplicate();
           QsRi.mulZn(Ri);    
-          Element pair2 = pairing.pairing( QsRi , receiver.getPKu2() );
+          Element pair2 = pairing.pairing( QsRi , sender.getPKu2() );
           
           byte [] wordByte = word.getBytes();
           Element hash3_word = pairing.getG1().newElement().setFromHash(wordByte, 0, wordByte.length);
           hash3_word.mulZn(Ri);
+
           Element pair3 = pairing.pairing( hash3_word , r.getP() );
 
           Element Ti = pair1.duplicate();
@@ -257,14 +285,14 @@ public class JpbcCheckController {
 
           time_generater_key_start  = System.currentTimeMillis();
 
-
           Element T1 = r.getP().duplicate();
           T1.mulZn(r.getMaster_key_lamda());
           Element H2wSKR = receiver.getSKu2().duplicate();
           H2wSKR.mulZn(hash);
-          Element lambdaPKs = sender.getPKu1() ;
+          Element lambdaPKs = sender.getPKu1().duplicate() ;
+          System.out.println("lamsdf "+lambdaPKs);
           lambdaPKs.mulZn(r.getMaster_key_lamda());
-
+          System.out.println("lamsdf  2 "+lambdaPKs);
           byte [] H2wSKRByte = H2wSKR.toBytes();
         //   Element e = pairing.getG1().newElement();
         //   int bythread = e.setFromBytes(H2wSKRByte);
@@ -272,26 +300,27 @@ public class JpbcCheckController {
         //   System.out.println("H2wSKR--- "+H2wSKR);
           byte [] lambdaPKsByte = lambdaPKs.toBytes();
           int lenFinal = Math.max(H2wSKRByte.length, lambdaPKsByte.length);
-          byte[] array = new byte[lenFinal];
+          byte[] T2bytexor = new byte[lenFinal];
           for( int  i = 0 ; i < lenFinal ; i++ )
           {
               int x = (int) H2wSKRByte[i] ^ (int) lambdaPKsByte[i];
-              array[i] = (byte)x;
+              T2bytexor[i] = (byte)x;
           }
+        
           Element T2 = pairing.getG1().newElement();
-          int bythread = T2.setFromBytes(array);
+          int bythread = T2.setFromBytes(T2bytexor);
           byte [] wordByte2 = word.getBytes();
           Element hash3_word2 = pairing.getG1().newElement().setFromHash(wordByte2, 0, wordByte2.length);
           byte [] hash3WordByte = hash3_word2.toBytes();
           lenFinal = Math.max(hash3WordByte.length, lambdaPKsByte.length);
-          array = new byte[lenFinal];
+          byte [] T3bytexor = new byte[lenFinal];
           for( int  i = 0 ; i < lenFinal ; i++ )
           {
               int x = (int) hash3WordByte[i] ^ (int) lambdaPKsByte[i];
-              array[i] = (byte)x;
+              T3bytexor[i] = (byte)x;
           }
           Element T3 = pairing.getG1().newElement();
-          bythread = T3.setFromBytes(array);
+          bythread = T3.setFromBytes(T3bytexor);
 
           TrapdoorWord wordSearch = new TrapdoorWord();
           wordSearch.setT1(T1);
@@ -300,7 +329,6 @@ public class JpbcCheckController {
           time_generater_key_end  = System.currentTimeMillis();
 
           wordSearch.setRequiredTime((time_generater_key_end-time_generater_key_start));
-  
           // TEST()
 
           Element SKsT1 = wordSearch.getT1().duplicate();
@@ -338,18 +366,19 @@ public class JpbcCheckController {
           if( hash4pairbyte.equals(byteVi) )
           {
               System.out.println("\nYes !!! \nsuccessfully  find the word\n");
-              equality="\nYes !!! \nsuccessfully  find the word\n";
+              equality="\nYes !!! \nsuccessfully  find the word\n"+"\n hash4pairbig  : "+hash4pairbig+"\n Vi()          : "+cipherword.getVi();
           }
           else
           {
                 System.out.println("\n oh No oh NO oh No !!! \nsuccessfully didn't find  the word\n");
-                equality = "\n oh No oh NO oh No !!! \nsuccessfully didn't find  the word\n";
+                equality = "\n oh No oh NO oh No !!! \nsuccessfully didn't find  the word\n"+"\n hash4pairbig  : "+hash4pairbig+"\n Vi()          : "+cipherword.getVi();
           }
-        //   System.out.println(" hash4pairbig  q--- "+hash4pairbig);
-        //   System.out.println("cipherword.getVi()--- "+cipherword.getVi());
-        //   System.out.println("word tarpdoor q--- \n"+wordSearch);
+          System.out.println(" hash4pairbig  q--- "+hash4pairbig);
+          System.out.println("cipherword.getVi()--- "+cipherword.getVi());
+          System.out.println("word tarpdoor q--- \n"+wordSearch);
           
-        //   System.out.println("word q--- \n"+cipherword);
+          System.out.println("word q--- \n"+cipherword);
+
         String ret;
         ret = r.toString();
         ret +=" \n sender key------------- \n\n"+sender.toString();
