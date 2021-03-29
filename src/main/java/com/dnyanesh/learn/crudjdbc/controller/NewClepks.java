@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/pbc/clpeks")
-public class JpbcCheckController {
+@RequestMapping("/pbc/newclpeks")
+public class NewClepks {
     
     static BigInteger hash2_asscii(String str, BigInteger q)
     {
@@ -195,13 +195,13 @@ public class JpbcCheckController {
         pair_sender_P  = pairing.pairing(sender.getPKu2(), r.getP());
 
         if( pair_sender_PKc.isEqual(pair_sender_P) )
-		{
-			System.out.println("\nPairing equal for receiver ");
-		}
-		else
-		{
-			System.out.println("\nfail turn ⊥ and about\n");
-		}
+        {
+          System.out.println("\nPairing equal for receiver ");
+        }
+        else
+        {
+          System.out.println("\nfail turn ⊥ and about\n");
+        }
 
         //checking pair is equal.
         Element pair_receiver_PKc,pair_receiver_P;
@@ -211,13 +211,13 @@ public class JpbcCheckController {
 
 
         if( pair_receiver_PKc.isEqual(pair_receiver_P) )
-		{
-			System.out.println("\nPairing equal for receiver ");
-		}
-		else
-		{
-			System.out.println("\nfail turn ⊥ and about\n");
-		}
+        {
+          System.out.println("\nPairing equal for receiver ");
+        }
+        else
+        {
+          System.out.println("\nfail turn ⊥ and about\n");
+        }
 
         String word = "wordto_encrption";
         Element Ri;
@@ -227,18 +227,18 @@ public class JpbcCheckController {
         String data = "";
 
         try {                 // taking q from param
-            File myObj = new File("params1.txt");
-            Scanner myReader = new Scanner(myObj);
+                File myObj = new File("params1.txt");
+                Scanner myReader = new Scanner(myObj);
 
-           
-            data = myReader.nextLine();
-            data = myReader.nextLine();
-            data = data.substring(2);
-            
-            myReader.close();
+              
+                data = myReader.nextLine();
+                data = myReader.nextLine();
+                data = data.substring(2);
+                
+                myReader.close();
           } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+                System.out.println("An error occurred.");
+                e.printStackTrace();
           }
           String str = data;
           BigInteger q = new BigInteger(str);
@@ -302,8 +302,9 @@ public class JpbcCheckController {
           {
             T2bytexor[i] = (byte) T2intxor[i] ;
           }
-          Element T2 = pairing.getG1().newElement();
-          int bythread = T2.setFromBytes(T2bytexor);
+          Element T2 = H2wSKR.duplicate();
+          T2.add(lambdaPKs);
+          // int bythread = T2.setFromBytes(T2bytexor);
           byte [] wordByte2 = word.getBytes();
           Element hash3_word2 = pairing.getG1().newElement().setFromHash(wordByte2, 0, wordByte2.length);
          // System.out.println("hash3_word2 should be equal to t3 dash "+hash3_word2);
@@ -320,8 +321,10 @@ public class JpbcCheckController {
           {
             T3bytexor[i] = (byte) T3intxor[i] ;
           }
-          Element T3 = pairing.getG1().newElement();
-          bythread = T3.setFromBytes(T3bytexor);
+          Element T3 = hash3_word.duplicate();
+          T3.add(lambdaPKs);
+          // Element T3 = pairing.getG1().newElement();
+          // bythread = T3.setFromBytes(T3bytexor);
 
           TrapdoorWord wordSearch = new TrapdoorWord();
           wordSearch.setT1(T1);
@@ -365,11 +368,14 @@ public class JpbcCheckController {
           {
                 T3dashintobyte[i] = (byte)T3dashbyte[i];
           } 
-          Element T2dash = pairing.getG1().newElement();
-          bythread = T2dash.setFromBytes(T2dashintobyte);
-          Element T3dash = pairing.getG1().newElement();
-          bythread = T3dash.setFromBytes(T3dashintobyte);
-          
+          // Element T2dash = pairing.getG1().newElement();
+          // bythread = T2dash.setFromBytes(T2dashintobyte);
+          // Element T3dash = pairing.getG1().newElement();
+          // bythread = T3dash.setFromBytes(T3dashintobyte);
+          Element T2dash = T2.duplicate();
+          T2dash.sub(SKsT1);
+          Element T3dash = T3.duplicate();
+          T3dash.sub(SKsT1);
         //   Element T2dash = H2wSKR.duplicate();
         //   Element T3dash = hash3_word2.duplicate();
         //   System.out.println(" -----------T2dash --- "+ T2dash);
@@ -402,55 +408,7 @@ public class JpbcCheckController {
           
           System.out.println("word --- \n"+cipherword);
 
-          pairing = null;
-          Zr  = null;
-          P = null;
-          master_key_lamda = null;
-          PKc = null;
-          SKs = null;
-          Qus = null;
-          Dus = null;
-          Sus = null;
-          SKu2s = null;
-          SKu1s = null;
-          PKu2s = null;
-          PKu1s = null;
-
-          Qur = null;
-          Dur = null;
-          Sur = null;
-          SKu2r = null;
-          SKu1r = null;
-          PKu2r = null;
-          PKu1r = null;
-
-          Ri = null;
-          hash = null;
-          pair_sender_PKc = null;
-          pair_sender_P = null;
-          pair_receiver_P = null;
-          pair_receiver_PKc = null;
-          first = null;
-          pair1 = null;
-          QsRi = null;
-          pair2 = null;
-          hash3_word = null;
-          pair3 = null;
-          T1 = null ;
-          Ti = null ;
-          Ui = null;
-          H2wSKR = null;
-          lambdaPKs = null ;
-          T2 = null ;
-          hash3_word2 = null;
-          T3 = null; 
-          SKsT1 = null;
-          T2dash = null;
-          T3dash  = null;
-          firstElementPair = null;
-          hash4pair = null;
-
-
+          
         String ret;
         ret = r.toString();
         ret +=" \n sender key------------- \n\n"+sender.toString();
@@ -459,12 +417,6 @@ public class JpbcCheckController {
         ret +=" \n Trapdoor of word ------------- \n\n"+wordSearch.toString();
         ret += "\n Checking Trapdoor gives same reasult or not \n\n";
         ret += equality ;
-
-          r = null;
-          receiver = null;
-          sender = null;
-          cipherword = null;
-          wordSearch = null;
             return ret;
 	}
 
