@@ -9,6 +9,7 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.math.BigInteger;
 import java.util.Scanner;
 
@@ -109,6 +110,19 @@ public class NewClepks {
         // Field GT = pairing.getGT();
         
         Element P = pairing.getG1().newRandomElement();
+
+        try {
+            FileWriter fw = new FileWriter("P.txt");
+            String PStr = P.toString();
+            fw.write(PStr);
+            fw.flush();
+            fw.close();
+
+        } catch (IOException e) {
+            System.out.println("the we get problem in writering ");
+            e.printStackTrace();
+        }      
+
         Element master_key_lamda = pairing.getZr().newRandomElement();
         Element PKc = P.duplicate();
         PKc.mulZn(master_key_lamda);

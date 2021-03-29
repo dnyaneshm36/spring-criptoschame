@@ -39,7 +39,6 @@ for i in range(100):
 # Positive   17  Nagative   83
 
 
-
 # Positive   25  Nagative   75
 # Positive   21  Nagative   79
 # Positive   20  Nagative   80
@@ -48,6 +47,18 @@ for i in range(100):
 # Positive   20  Nagative   80
 # Positive   22  Nagative   78
 # Positive   17  Nagative   83
+
+# Positive   28  Nagative   72
+# Positive   26  Nagative   74
+# Positive   22  Nagative   78
+# Positive   18  Nagative   82
+# Positive   24  Nagative   76
+# Positive   22  Nagative   78
+# Positive   23  Nagative   77
+# Positive   28  Nagative   72
+
+# 5254430477340645926707307053786342127794888580815991133949402902900724220725240694867404964793288116291351483592113916284966500405679979998927847688219849,686595634627966064045336618054349393288166405504504894613173259181793746109834098542276202610027555320660364100521976908887576466255138826125193911216524,0
+
 
 # AUTH_ENDPOINT = "http://127.0.0.1:8000/api/auth/register/"
 

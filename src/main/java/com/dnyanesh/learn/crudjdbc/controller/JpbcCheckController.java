@@ -6,9 +6,12 @@ import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
+import it.unisa.dia.gas.plaf.jpbc.util.io.Base64;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Scanner;
 
@@ -63,7 +66,7 @@ public class JpbcCheckController {
 	}
 
 	@GetMapping(value = "/demo",  produces = "application/json")
-	public String getSetupParam() {
+	public String getSetupParam() throws IOException {
 
         // int rBits = 7;
         // int qBits = 20;
@@ -109,6 +112,35 @@ public class JpbcCheckController {
         // Field GT = pairing.getGT();
         
         Element P = pairing.getG1().newRandomElement();
+
+        // try {
+        //     FileWriter fw = new FileWriter("P.txt");
+        //     String PStr = Base64.encodeBytes(P.toBytes());
+        //     fw.write(PStr);
+        //     fw.flush();
+        //     fw.close();
+
+        // } catch (IOException e) {
+        //     System.out.println("the we are genpr wrigi in P ");
+        //     e.printStackTrace();
+        // }
+        // System.out.println("P is ---- "+P);
+        // try {                 // taking q from param
+        //   File myObj = new File("P.txt");
+        //   Scanner myReader = new Scanner(myObj);
+
+        //   String Pbytestr;
+        //   Pbytestr = myReader.nextLine();
+          
+        //   P = pairing.getG1().newElementFromBytes(Base64.decode(Pbytestr));
+        //   myReader.close();
+        // } catch (FileNotFoundException e) {
+        //   System.out.println("An error occurred.");
+        //   e.printStackTrace();
+        // }
+        
+        // System.out.println("P is --2-- "+P);
+
         Element master_key_lamda = pairing.getZr().newRandomElement();
         Element PKc = P.duplicate();
         PKc.mulZn(master_key_lamda);
