@@ -10,7 +10,6 @@ import it.unisa.dia.gas.plaf.jpbc.util.io.Base64;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Scanner;
@@ -124,22 +123,22 @@ public class JpbcCheckController {
         //     System.out.println("the we are genpr wrigi in P ");
         //     e.printStackTrace();
         // }
-        // System.out.println("P is ---- "+P);
-        // try {                 // taking q from param
-        //   File myObj = new File("P.txt");
-        //   Scanner myReader = new Scanner(myObj);
+        System.out.println("P is ---- "+P);
+        try {                 // taking q from param
+          File myObj = new File("P.txt");
+          Scanner myReader = new Scanner(myObj);
 
-        //   String Pbytestr;
-        //   Pbytestr = myReader.nextLine();
+          String Pbytestr;
+          Pbytestr = myReader.nextLine();
           
-        //   P = pairing.getG1().newElementFromBytes(Base64.decode(Pbytestr));
-        //   myReader.close();
-        // } catch (FileNotFoundException e) {
-        //   System.out.println("An error occurred.");
-        //   e.printStackTrace();
-        // }
+          P = pairing.getG1().newElementFromBytes(Base64.decode(Pbytestr));
+          myReader.close();
+        } catch (FileNotFoundException e) {
+          System.out.println("An error occurred.");
+          e.printStackTrace();
+        }
         
-        // System.out.println("P is --2-- "+P);
+        System.out.println("P is --2-- "+P);
 
         Element master_key_lamda = pairing.getZr().newRandomElement();
         Element PKc = P.duplicate();

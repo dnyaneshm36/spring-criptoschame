@@ -5,19 +5,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.jpbc.PairingPreProcessing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
+import it.unisa.dia.gas.plaf.jpbc.util.io.Base64;
 
 @RestController
 @RequestMapping("/api/mpkes")
 public class scfMPKESScheme {
     
     @GetMapping(value = "/trapdoor/{trapdoor}",  produces = "application/json")
-    public String getSetupParam(@PathVariable(value = "trapdoor") String w1_Trapdoor_new) {
+    public String getSetupParam(@PathVariable(value = "trapdoor") String w1_Trapdoor_new) throws IOException {
 
 
                     System.out.println("the dnyanesh ");
@@ -54,6 +60,33 @@ public class scfMPKESScheme {
 
                     int j = 0;
                     Element P = pairing.getG1().newRandomElement();
+        //                     try {
+        //     FileWriter fw = new FileWriter("P.txt");
+        //     String PStr = Base64.encodeBytes(P.toBytes());
+        //     fw.write(PStr);
+        //     fw.flush();
+        //     fw.close();
+
+        // } catch (IOException e) {
+        //     System.out.println("the we are genpr wrigi in P ");
+        //     e.printStackTrace();
+        // }
+        System.out.println("P is ---- "+P);
+        try {                 // taking q from param
+          File myObj = new File("P.txt");
+          Scanner myReader = new Scanner(myObj);
+
+          String Pbytestr;
+          Pbytestr = myReader.nextLine();
+          
+          P = pairing.getG1().newElementFromBytes(Base64.decode(Pbytestr));
+          myReader.close();
+        } catch (FileNotFoundException e) {
+          System.out.println("An error occurred.");
+          e.printStackTrace();
+        }
+        System.out.println("P is ---- "+P);
+
                     //keyGen -Server 
                     //sks = a pks = (A,B)\
                     long KeyGen_server_start = System.currentTimeMillis();

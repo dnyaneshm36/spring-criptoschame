@@ -15,7 +15,6 @@ public class Employee {
 	private String firstName;
 	private String lastName;
 	private String emailId;
-	
 	public Employee() {
 		super();
 	}
@@ -53,7 +52,7 @@ public class Employee {
 		this.lastName = lastName;
 	}
 	
-	@Column(name = "email_address", nullable = false)
+	@Column(name = "email_address", nullable = false, unique = true)
 	public String getEmailId() {
 		return emailId;
 	}
