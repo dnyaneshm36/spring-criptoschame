@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Scanner;
 
-import com.dnyanesh.learn.crudjdbc.model.KengenSender;
+import com.dnyanesh.learn.crudjdbc.model.microservice.senderobject.KengenSender;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

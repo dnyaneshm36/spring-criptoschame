@@ -2,12 +2,6 @@ package com.dnyanesh.learn.crudjdbc.controller;
 
 
 
-import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
-import it.unisa.dia.gas.jpbc.Pairing;
-import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
-import it.unisa.dia.gas.plaf.jpbc.util.io.Base64;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,8 +15,12 @@ import com.dnyanesh.learn.crudjdbc.model.TrapdoorWord;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
+
+import it.unisa.dia.gas.jpbc.Element;
+import it.unisa.dia.gas.jpbc.Field;
+import it.unisa.dia.gas.jpbc.Pairing;
+import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
 
 
@@ -100,7 +98,7 @@ public class JpbcCheckController {
         
         /* Return Zr */
         Field Zr = pairing.getZr();
-
+          System.out.println(Zr);
         // /* Return G1 */
         // Field G1 = pairing.getG1();
 
@@ -335,6 +333,7 @@ public class JpbcCheckController {
           
           Element T2 = pairing.getG1().newElement();
           int bythread = T2.setFromBytes(T2bytexor);
+          System.out.println(bythread);
           byte [] wordByte2 = word.getBytes();
           Element hash3_word2 = pairing.getG1().newElement().setFromHash(wordByte2, 0, wordByte2.length);
          // System.out.println("hash3_word2 should be equal to t3 dash "+hash3_word2);

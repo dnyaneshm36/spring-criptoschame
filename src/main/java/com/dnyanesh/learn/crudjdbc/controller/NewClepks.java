@@ -98,7 +98,7 @@ public class NewClepks {
         
         /* Return Zr */
         Field Zr = pairing.getZr();
-
+        System.out.println(Zr);
         // /* Return G1 */
         // Field G1 = pairing.getG1();
 

@@ -55,7 +55,7 @@ public class scfMPEKS {
 
             PairingPreProcessing pA = pairing.getPairingPreProcessingFromElement(A);
             Element B = pairing.getG1().newRandomElement(); // B
-            PairingPreProcessing pB = pairing.getPairingPreProcessingFromElement(B);
+            // PairingPreProcessing pB = pairing.getPairingPreProcessingFromElement(B);
 
             long KenyGen_server_end = System.currentTimeMillis();
             System.out.println("SKF - MPEKS KenyGen _server [" +j+"]: "+(KenyGen_server_end - KeyGen_server_start) );
@@ -190,7 +190,7 @@ public class scfMPEKS {
         //Tw1 - T1 XOR T2*e(aB,C)
         //XOR
         byte[] tt5 = Twi_right.toBytes();
-        byte[] tt6 = Twi_right.toBytes();
+        // byte[] tt6 = Twi_right.toBytes();
         int temp2 = 0;
         if(tt5.length <= array.length)
         {
@@ -221,7 +221,9 @@ public class scfMPEKS {
                 System.out.println("Wrong!...exit!");
                 System.exit(0);
                 }        
-        }        
+        }
+        
+        System.out.println(KeyGen_receiver_start+Trapdoor_start+KenyGen_receiver_end+Test_start);
         //System.out.println();        
         System.out.println("OK!"); //It means T1=cH(w*)="Barclays"
 

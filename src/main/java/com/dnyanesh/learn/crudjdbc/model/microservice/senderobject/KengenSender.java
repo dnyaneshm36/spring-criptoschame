@@ -1,4 +1,4 @@
-package com.dnyanesh.learn.crudjdbc.model;
+package com.dnyanesh.learn.crudjdbc.model.microservice.senderobject;
 
 public class KengenSender {
     String sks;

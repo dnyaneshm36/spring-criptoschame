@@ -1,16 +1,15 @@
 package com.dnyanesh.learn.crudjdbc.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Scanner;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Scanner;
 
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
@@ -97,7 +96,7 @@ public class scfMPKESScheme {
                     PairingPreProcessing pA = pairing.getPairingPreProcessingFromElement(A);
                     Element B = pairing.getG1().newRandomElement(); // B
                     PairingPreProcessing pB = pairing.getPairingPreProcessingFromElement(B);
-
+                    System.out.println(pB);
                     long KenyGen_server_end = System.currentTimeMillis();
                     System.out.println("SKF - MPEKS KenyGen _server [" +j+"]: "+(KenyGen_server_end - KeyGen_server_start) );
 
@@ -110,7 +109,7 @@ public class scfMPKESScheme {
 
                     PairingPreProcessing pC = pairing.getPairingPreProcessingFromElement(C);
                     long KenyGen_receiver_end = System.currentTimeMillis();
-
+                    System.out.println(KeyGen_receiver_start+KenyGen_receiver_end);
                     //SCF-MPEKS
                     // S = (M,N1,N2, .... Nn) = (tA, H*[e(H(w1),C)^t]
                     //SCF-MPEKS 
@@ -179,7 +178,7 @@ public class scfMPKESScheme {
                 tB_Trapdoor.mulZn(t_Trapdoor); //t*B 
                 Element T2 = pA.pairing(tB_Trapdoor); //T2
 
-
+                
 
                 //H(w*)
                 byte[] b1_Trapdoor = new byte[10];
@@ -224,6 +223,7 @@ public class scfMPKESScheme {
                 //The server first calculates Twi - T1 XOR T2*e(aB,C)
 
                 long Test_start = System.currentTimeMillis(); 
+                System.out.println(Trapdoor_start+Test_start);
                 Element Twi_right = T2.duplicate();
                 //T = e(aB, C)
                 Element T = pC.pairing(B).mulZn(a);
@@ -232,7 +232,6 @@ public class scfMPKESScheme {
                 //Tw1 - T1 XOR T2*e(aB,C)
                 //XOR
                 byte[] tt5 = Twi_right.toBytes();
-                byte[] tt6 = Twi_right.toBytes();
                 int temp2 = 0;
                 if(tt5.length <= array.length)
                 {
