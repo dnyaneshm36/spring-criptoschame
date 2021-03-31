@@ -322,21 +322,17 @@ public class JpbcCheckController {
         //   System.out.println("H2wSKR--- "+H2wSKR);
           byte [] lambdaPKsByte = lambdaPKs.toBytes();
           int lenFinal = Math.max(H2wSKRByte.length, lambdaPKsByte.length);
-          int[] T2intxor = new int[lenFinal];
-          for( int  i = 0 ; i < T2intxor.length ; i++ )
+          byte[] T2bytexor = new byte[lenFinal];
+          for( int  i = 0 ; i < lenFinal ; i++ )
           {
               byte x =  H2wSKRByte[i];
               byte y =  lambdaPKsByte[i];
               int xint = x;
               int yint = y;
               int ans = ( xint ^ yint );
-              T2intxor[i] = ans;
+              T2bytexor[i] = (byte) ans;
           }
-          byte[] T2bytexor = new byte[T2intxor.length];
-          for( int  i = 0 ; i < T2bytexor.length ; i++ )
-          {
-            T2bytexor[i] = (byte) T2intxor[i] ;
-          }
+          
           Element T2 = pairing.getG1().newElement();
           int bythread = T2.setFromBytes(T2bytexor);
           byte [] wordByte2 = word.getBytes();
@@ -344,20 +340,15 @@ public class JpbcCheckController {
          // System.out.println("hash3_word2 should be equal to t3 dash "+hash3_word2);
           byte [] hash3WordByte = hash3_word2.toBytes();
           lenFinal = Math.max(hash3WordByte.length, lambdaPKsByte.length);
-          int[] T3intxor = new int[lenFinal];
-          for( int  i = 0 ; i < T3intxor.length ; i++ )
+          byte[] T3bytexor = new byte[lenFinal];
+          for( int  i = 0 ; i < lenFinal ; i++ )
           {
               byte x =  hash3WordByte[i];
               byte y =  lambdaPKsByte[i];
               int xint = x;
               int yint = y;
               int ans = ( xint ^ yint );
-              T3intxor[i] = ans;
-          }
-          byte[] T3bytexor = new byte[T3intxor.length];
-          for( int  i = 0 ; i < T3bytexor.length ; i++ )
-          {
-            T3bytexor[i] = (byte) T3intxor[i] ;
+              T3bytexor[i] = (byte) ans;
           }
           Element T3 = pairing.getG1().newElement();
           bythread = T3.setFromBytes(T3bytexor);
@@ -383,15 +374,15 @@ public class JpbcCheckController {
         //   int [] T2byte = T2bytexor;
         //   int [] T3byte = T3bytexor;
           lenFinal = Math.max(T2byte.length, SKsT1byte.length);
-          int [] T2dashbyte = new int[lenFinal];
-          for( int  i = 0 ; i < T2dashbyte.length ; i++ )
+          byte [] T2dashintobyte = new byte[lenFinal];
+          for( int  i = 0 ; i < lenFinal ; i++ )
           {
               byte x =  T2byte[i];
               byte y =  SKsT1byte[i];
               int xint = x;
               int yint = y;
               int ans = ( xint ^ yint );
-              T2dashbyte[i] = ans;
+              T2dashintobyte[i] = (byte) ans;
               
               // if(H2wSKRByte[i]!=T2dashbyte[i])
               //   {
@@ -400,31 +391,20 @@ public class JpbcCheckController {
           }
 
           lenFinal = Math.max(T3byte.length, SKsT1byte.length);
-          int [] T3dashbyte = new int[lenFinal];
-          for( int  i = 0 ; i < T3dashbyte.length ; i++ )
+          byte [] T3dashintobyte = new byte[lenFinal];
+          for( int  i = 0 ; i < lenFinal ; i++ )
           {
               byte x =  T3byte[i];
               byte y =  SKsT1byte[i];
               int xint = x;
               int yint = y;
               int ans = ( xint ^ yint );
-              T3dashbyte[i] = ans;
+              T3dashintobyte[i] = (byte) ans;
                 // if(hash3WordByte[i]!=T3dashbyte[i])
                 // {
                 //   System.out.println(i+"   1111    "+T3dashbyte[i]+"   --==--   "+T3byte[i]+"   ^   "+SKsT1byte[i] +"  ---  "+hash3WordByte[i]);
                 // }
           }
-
-          byte [] T2dashintobyte = new byte[T2dashbyte.length];
-          for ( int i = 0 ; i < T2dashbyte.length ; i++)
-          {
-                T2dashintobyte[i] = (byte)T2dashbyte[i];
-          }       
-          byte [] T3dashintobyte = new byte[T3dashbyte.length];
-          for ( int i = 0 ; i < T3dashbyte.length ; i++)
-          {
-                T3dashintobyte[i] = (byte)T3dashbyte[i];
-          } 
           // if you comment bellow fourlines uncommment  t2dash line then it run perfect
           
           Element T2dash = pairing.getG1().newElement();

@@ -3,7 +3,7 @@ import requests
 import os 
 
 
-
+result = 0
 
 
 ENDPOINT = "http://localhost:8080/pbc/clpeks/demo"
@@ -18,15 +18,41 @@ no = 0
 fullstring = "StackAbuse"
 substringno = "No !!!"
 substringyes = "Yes !!!"
-for i in range(100):
+setup = 0
+sender = 0 
+receiver = 0
+cipher = 0
+trapdoor = 0
+for i in range(1000):
+    result = 0
     r = requests.get(ENDPOINT,headers= headers2)
+    quote = r.text
+    result = quote.find('requiredTime',result + 1 ,len(quote)-1)
+    # print(" ", result,quote[result+15],quote[result+15:result+18])
+    setup += int(quote[result+15:result+18])
+    result = quote.find('requiredTime',result + 1 ,len(quote)-1)
+    # print(" ", result,quote[result+15],quote[result+15:result+18])
+    sender += int(quote[result+15:result+18])
+    result = quote.find('requiredTime',result + 1 ,len(quote)-1)
+    # print(" ", result,quote[result+15],quote[result+15:result+18])
+    receiver += int(quote[result+15:result+18])
+    result = quote.find('requiredTime',result + 1 ,len(quote)-1)
+    # print(" ", result,quote[result+15],quote[result+15:result+18])
+    cipher += int(quote[result+15:result+18])
+    result = quote.find('requiredTime',result + 1 ,len(quote)-1)
+    # print(" ", result,quote[result+15],quote[result+15:result+18])
+    trapdoor += int(quote[result+15:result+18])
     if substringyes in r.text:
         yes += 1
     else:
         no += 1
     print("Positive  ",yes," Nagative  ",no)
 
-
+print("setup",setup)
+print("sender",sender)
+print("receiver",receiver)
+print("cipher",cipher)
+print("trapodrorr",trapdoor)
 # this are result for 8 differet terminals for 100 requests
 
 # Positive   18  Nagative   82

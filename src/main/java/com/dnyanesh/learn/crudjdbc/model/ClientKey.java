@@ -98,7 +98,7 @@ public class ClientKey {
                 public String toString() {
                     return "ClientKey: \n{ \n Du = [ " + Du + " ] , \n IDu = [ " + IDu + " ] , \n PKu = [ " + PKu + " ] , \n PKu1 = [ " + PKu1 + " ] , \n PKu2 = [ " + PKu2
                             + " ] , \n Qu = [ " + Qu + " ] , \n SKu = [ " + SKu + " ] , \n SKu1 = [ " + SKu1 + " ] , \n SKu2 = [ " + SKu2 + " ] , \n Su = [ " + Su
-                            + " ] , \n requredTime = " + requredTime + " ( milli second )\n}\n";
+                            + " ] , \n requiredTime = " + requredTime + " ( milli second )\n}\n";
                 }
                 
 

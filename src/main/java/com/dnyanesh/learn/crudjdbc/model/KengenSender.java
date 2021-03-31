@@ -32,7 +32,7 @@ public class KengenSender {
     }
     @Override
     public String toString() {
-        return "KengenSender [pks=" + pks + ", sks=" + sks + ", time=" + time + "]";
+        return "KengenSender [pks=" + pks + ", sks=" + sks + ", requiredTime =" + time + "]";
     }
 
 
