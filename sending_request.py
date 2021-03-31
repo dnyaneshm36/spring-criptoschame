@@ -111,6 +111,12 @@ print("trapodrorr",trapdoor)
 # token = r.json()
 # print(token)
 
+# setup 18100
+# sender 95057
+# receiver 93136
+# cipher 149027
+# trapodrorr 63967
+
 
 
 
