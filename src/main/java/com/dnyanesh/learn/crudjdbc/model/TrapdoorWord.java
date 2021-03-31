@@ -6,16 +6,18 @@ public class TrapdoorWord {
         Element T1;
         Element T2;
         Element T3;
-        String stringT2;
-        String stringT3;
+        byte [] byteArrayT2;
+        byte [] bythArrayT3;
         long requiredTime;
-        public TrapdoorWord(Element t1, Element t2, Element t3, String stringT2, String stringT3) {
-            super();
-            this.T1 = t1.duplicate();
-            this.T2 = t2.duplicate();
-            this.T3 = t3.duplicate();
-            this.stringT2 = stringT2;
-            this.stringT3 = stringT3;
+        public TrapdoorWord(Element t1, Element t2, Element t3, byte[] byteArrayT2, byte[] bythArrayT3,
+                long requiredTime) {
+                    super();
+                    this.T1 = t1.duplicate();
+                    this.T2 = t2.duplicate();
+                    this.T3 = t3.duplicate();
+                    this.byteArrayT2 = byteArrayT2.clone();
+                    this.bythArrayT3 = bythArrayT3.clone();
+                    this.requiredTime = requiredTime;
         }
         public TrapdoorWord() {
             super();
@@ -38,20 +40,20 @@ public class TrapdoorWord {
         public void setT3(Element t3) {
             this.T3 = t3.duplicate();
         }
-        public String getStringT2() {
-            return stringT2;
-        }
-        public void setStringT2(String stringT2) {
-            this.stringT2 = stringT2;
-        }
-        public String getStringT3() {
-            return stringT3;
-        }
-        public void setStringT3(String stringT3) {
-            this.stringT3 = stringT3;
-        }
         public long getRequiredTime() {
             return requiredTime;
+        }
+        public byte[] getByteArrayT2() {
+            return byteArrayT2;
+        }
+        public void setByteArrayT2(byte[] byteArrayT2) {
+            this.byteArrayT2 = byteArrayT2.clone();
+        }
+        public byte[] getBythArrayT3() {
+            return bythArrayT3;
+        }
+        public void setBythArrayT3(byte[] bythArrayT3) {
+            this.bythArrayT3 = bythArrayT3.clone();
         }
         public void setRequiredTime(long requiredTime) {
             this.requiredTime = requiredTime;
@@ -59,8 +61,11 @@ public class TrapdoorWord {
         @Override
         public String toString() {
             return "TrapdoorWord: \n{ \n  T1 = [ " + T1 + " ] , \n  T2 = [ " + T2 + " ] , \n  T3 = [ " + T3 + " ] , \n  requiredTime = " + requiredTime
-                    + " , \n stringT2=" + stringT2 + ", stringT3=" + stringT3 + "\n}";
+                    + " , \n  \n}";
         }
+
+        
+
         
         
 }

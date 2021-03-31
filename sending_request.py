@@ -6,7 +6,7 @@ import os
 
 
 
-ENDPOINT = "https://criptography-dnyanesh.herokuapp.com/api/mpkes/trapdoor/Finance"
+ENDPOINT = "http://localhost:8080/pbc/clpeks/demo"
 headers2 = {
      "Content-Type": "application/json"
 }
@@ -16,8 +16,8 @@ headers2 = {
 yes = 0
 no = 0
 fullstring = "StackAbuse"
-substringno = "false"
-substringyes = "true"
+substringno = "No !!!"
+substringyes = "Yes !!!"
 for i in range(100):
     r = requests.get(ENDPOINT,headers= headers2)
     if substringyes in r.text:
