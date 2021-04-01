@@ -1,6 +1,9 @@
 package com.dnyanesh.learn.crudjdbc.controller;
 
-
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest; 
+import java.security.NoSuchAlgorithmException; 
+  
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,34 +31,107 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 @RequestMapping("/pbc/clpeks")
 public class JpbcCheckController {
     
-    static BigInteger hash2_asscii(String str, BigInteger q)
-    {
-        int l = str.length();
-        int convert;
-        BigInteger sum = new BigInteger("0");
-        for ( int i = 0 ; i < l ; i++ )
-        {
-            convert = (int) str.charAt(i) ;
+              public static byte[] getSHA(String input) throws NoSuchAlgorithmException
+              { 
+                  // Static getInstance method is called with hashing SHA 
+                  MessageDigest md = MessageDigest.getInstance("SHA-256"); 
 
-            // convert int to BigInteger
-            BigInteger bigconv = BigInteger.valueOf(convert);
-            sum = sum.add(bigconv);
-        }
-        sum = sum.mod(q);
+                  // digest() method called 
+                  // to calculate message digest of an input 
+                  // and return array of byte
+                  return md.digest(input.getBytes(StandardCharsets.UTF_8)); 
+              }
+              
+              public static String toHexString(byte[] hash)
+              {
+                  // Convert byte array into signum representation 
+                  BigInteger number = new BigInteger(1, hash); 
 
-        // // converting String to ASCII value in Java 
-        // try {
-        //      String text = "ABCDEFGHIJKLMNOP"; 
-        // // translating text String to 7 bit ASCII encoding 
-        // byte[] bytes = text.getBytes("US-ASCII"); 
-        // System.out.println("ASCII value of " + text + " is following"); 
-        // System.out.println(Arrays.toString(bytes)); 
-        // } catch (java.io.UnsupportedEncodingException e)
-        //  {
-        //       e.printStackTrace(); 
-        // }
-        return sum;
-    }
+                  // Convert message digest into hex value 
+                  StringBuilder hexString = new StringBuilder(number.toString(16)); 
+
+                  // Pad with leading zeros
+                  while (hexString.length() < 32) 
+                  { 
+                      hexString.insert(0, '0'); 
+                  } 
+                  return hexString.toString(); 
+              }
+              //H1: {0,1}*→G1*
+              static Element hash1(String str,Pairing pairing)
+              {
+                  String shastring = "";
+                  try {
+                    shastring = toHexString(getSHA(str));
+                  } catch (NoSuchAlgorithmException e) {
+                    System.out.println(" No such Algorithm exception occurred ");
+                    e.printStackTrace();
+                  }
+                  byte [] shatringbyte = shastring.getBytes();
+
+                  Element g1 = pairing.getG1().newElement().setFromHash(shatringbyte, 0, shatringbyte.length);
+                  return g1.duplicate();
+              }
+              //H2: {0,1}*→Zq*
+              static BigInteger hash2_asscii(String str, BigInteger q)
+              {
+
+                  String shastring = "";
+                  try {
+                    shastring = toHexString(getSHA(str));
+                  } catch (NoSuchAlgorithmException e) {
+                    System.out.println(" No such Algorithm exception occurred ");
+                    e.printStackTrace();
+                  }
+                  int l = shastring.length();
+                  int convert;
+                  BigInteger sum = new BigInteger("0");
+                  for ( int i = 0 ; i < l ; i++ )
+                  {
+                      convert = (int) shastring.charAt(i) ;
+
+                      // convert int to BigInteger
+                      BigInteger bigconv = BigInteger.valueOf(convert);
+                      sum = sum.add(bigconv);
+                  }
+                  sum = sum.mod(q);
+
+                  // // converting String to ASCII value in Java 
+                  // try {
+                  //      String text = "ABCDEFGHIJKLMNOP"; 
+                  // // translating text String to 7 bit ASCII encoding 
+                  // byte[] bytes = text.getBytes("US-ASCII"); 
+                  // System.out.println("ASCII value of " + text + " is following"); 
+                  // System.out.println(Arrays.toString(bytes)); 
+                  // } catch (java.io.UnsupportedEncodingException e)
+                  //  {
+                  //       e.printStackTrace(); 
+                  // }
+                  return sum;
+              }
+              //H3: {0,1}*→G1*
+              static Element hash3(String str,Pairing pairing)
+              {
+                  String shastring = "";
+                  try {
+                    shastring = toHexString(getSHA(str));
+                  } catch (NoSuchAlgorithmException e) {
+                    System.out.println(" No such Algorithm exception occurred ");
+                    e.printStackTrace();
+                  }
+                  byte [] shatringbyte = shastring.getBytes();
+
+                  Element g1 = pairing.getG1().newElement().setFromHash(shatringbyte, 0, shatringbyte.length);
+                  return g1.duplicate();
+              }
+              // H4:G2→{0,1}f
+              static BigInteger hash4(Element G2pair)
+              {
+                    byte [ ] G2pairbyte = G2pair.toBytes();
+
+                    BigInteger G2pairbiginterger = new BigInteger(G2pairbyte);
+                    return G2pairbiginterger;
+              }
 
     @GetMapping("/home")
 	public String home(){
@@ -65,6 +141,7 @@ public class JpbcCheckController {
 	@GetMapping(value = "/demo",  produces = "application/json")
 	public String getSetupParam() throws IOException {
 
+ 
         // int rBits = 7;
         // int qBits = 20;
         // PairingParametersGenerator pg = new TypeACurveGenerator(rBits, qBits);
@@ -98,7 +175,7 @@ public class JpbcCheckController {
         
         /* Return Zr */
         Field Zr = pairing.getZr();
-          System.out.println(Zr);
+
         // /* Return G1 */
         // Field G1 = pairing.getG1();
 
@@ -152,9 +229,8 @@ public class JpbcCheckController {
         long  time_generater_key_start  = System.currentTimeMillis();
         ClientKey sender;
         String senderId = "senderid";
-        byte [] senderbyte = senderId.getBytes();
 
-        Element Qus = pairing.getG1().newElement().setFromHash(senderbyte, 0, senderbyte.length);
+        Element Qus = hash1(senderId, pairing).duplicate();
         Element Dus = Qus.duplicate();
         Dus.mulZn(master_key_lamda);
 
@@ -182,8 +258,7 @@ public class JpbcCheckController {
         
         ClientKey receiver;
         String receiverId = "receiverid";
-        byte [] receiverbyte = receiverId.getBytes();
-        Element Qur = pairing.getG1().newElement().setFromHash(receiverbyte, 0, receiverbyte.length);
+        Element Qur = hash1(receiverId, pairing);
         Element Dur = Qur.duplicate();
         Dur.mulZn(master_key_lamda);
         receiver = new ClientKey(receiverId, Qur, Dur);
@@ -224,13 +299,13 @@ public class JpbcCheckController {
         pair_sender_P  = pairing.pairing(sender.getPKu2(), r.getP());
 
         if( pair_sender_PKc.isEqual(pair_sender_P) )
-		{
-			System.out.println("\nPairing equal for receiver ");
-		}
-		else
-		{
-			System.out.println("\nfail turn ⊥ and about\n");
-		}
+        {
+          System.out.println("\nPairing equal for receiver ");
+        }
+        else
+        {
+          System.out.println("\nfail turn ⊥ and about\n");
+        }
 
         //checking pair is equal.
         Element pair_receiver_PKc,pair_receiver_P;
@@ -240,13 +315,13 @@ public class JpbcCheckController {
 
 
         if( pair_receiver_PKc.isEqual(pair_receiver_P) )
-		{
-			System.out.println("\nPairing equal for receiver ");
-		}
-		else
-		{
-			System.out.println("\nfail turn ⊥ and about\n");
-		}
+        {
+          System.out.println("\nPairing equal for receiver ");
+        }
+        else
+        {
+          System.out.println("\nfail turn ⊥ and about\n");
+        }
 
         String word = "wordto_encrption";
         Element Ri;
@@ -281,8 +356,8 @@ public class JpbcCheckController {
           QsRi.mulZn(Ri);    
           Element pair2 = pairing.pairing( QsRi , sender.getPKu2() );
           
-          byte [] wordByte = word.getBytes();
-          Element hash3_word = pairing.getG1().newElement().setFromHash(wordByte, 0, wordByte.length);
+          
+          Element hash3_word = hash3(word, pairing).duplicate();
           hash3_word.mulZn(Ri);
 
           Element pair3 = pairing.pairing( hash3_word , r.getP() );
@@ -291,10 +366,9 @@ public class JpbcCheckController {
           Ti.mul(pair2);
           Ti.mul(pair3);
 
-          byte [ ] byteVi = Ti.toBytes();
           Element Ui =  r.getP().duplicate();
           Ui.mulZn(Ri);
-          BigInteger Vi = new BigInteger(byteVi);
+          BigInteger Vi = hash4(Ti);
           CipherWord cipherword = new CipherWord(Ui,Vi);
 
           time_generater_key_end  = System.currentTimeMillis();
@@ -305,10 +379,13 @@ public class JpbcCheckController {
 
           time_generater_key_start  = System.currentTimeMillis();
 
+          String wordchecking = "wordto_encrption";
+          BigInteger hash2big = hash2_asscii(wordchecking, q);
+          Element hash2 = Zr.newElement(hash2big);
           Element T1 = r.getP().duplicate();
           T1.mulZn(r.getMaster_key_lamda());
           Element H2wSKR = receiver.getSKu2().duplicate();
-          H2wSKR.mulZn(hash);
+          H2wSKR.mulZn(hash2);
           Element lambdaPKs = sender.getPKu1().duplicate() ;
         //   System.out.println("lamsdf  H2wSKR  t2 -dash-"+H2wSKR);
           lambdaPKs.mulZn(r.getMaster_key_lamda());
@@ -334,8 +411,8 @@ public class JpbcCheckController {
           Element T2 = pairing.getG1().newElement();
           int bythread = T2.setFromBytes(T2bytexor);
           System.out.println(bythread);
-          byte [] wordByte2 = word.getBytes();
-          Element hash3_word2 = pairing.getG1().newElement().setFromHash(wordByte2, 0, wordByte2.length);
+
+          Element hash3_word2 = hash3(wordchecking, pairing).duplicate();
          // System.out.println("hash3_word2 should be equal to t3 dash "+hash3_word2);
           byte [] hash3WordByte = hash3_word2.toBytes();
           lenFinal = Math.max(hash3WordByte.length, lambdaPKsByte.length);
@@ -424,10 +501,8 @@ public class JpbcCheckController {
           firstElementPair.add(T3dash);
         //   System.out.println("firstElementPair 2  "+firstElementPair);
           Element hash4pair =  pairing.pairing(firstElementPair, cipherword.getUi());
-          
-          byte [ ] hash4pairbyte = hash4pair.toBytes();
   
-          BigInteger hash4pairbig = new BigInteger(hash4pairbyte);
+          BigInteger hash4pairbig = hash4(hash4pair);
           String equality;
 
           // System.out.println("------------------H2wSKRByte-----------------"+H2wSKRByte.length);
