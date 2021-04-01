@@ -10,3 +10,5 @@ mvn install:install-file \
    -Dversion=2.0.0 \
    -Dpackaging=jar \
    -DgeneratePom=true
+
+   git ls-files | xargs wc -l
