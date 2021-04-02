@@ -1,14 +1,12 @@
 package com.dnyanesh.learn.crudjdbc.controller;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest; 
-import java.security.NoSuchAlgorithmException; 
-  
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 import com.dnyanesh.learn.crudjdbc.model.CipherWord;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 
