@@ -1,19 +1,20 @@
 package com.dnyanesh.learn.crudjdbc.model.microservice.receiverobject;
 
 import java.math.BigInteger;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class TestReceiver {
 
-        byte [] T2byte;
-        byte [] T3byte;
+        ArrayList <Byte> T2byte;
+        ArrayList <Byte> T3byte;
         String T1;
         String SKs1;
         String SKs2;
 
         String Ui;
         BigInteger Vi;
-        public TestReceiver(byte[] t2byte, byte[] t3byte, String t1, String sKs1, String sKs2, String ui, BigInteger vi) {
+        public TestReceiver(ArrayList<Byte> t2byte, ArrayList<Byte> t3byte, String t1, String sKs1, String sKs2,
+                String ui, BigInteger vi) {
             T2byte = t2byte;
             T3byte = t3byte;
             T1 = t1;
@@ -24,16 +25,16 @@ public class TestReceiver {
         }
         public TestReceiver() {
         }
-        public byte[] getT2byte() {
+        public ArrayList<Byte> getT2byte() {
             return T2byte;
         }
-        public void setT2byte(byte[] t2byte) {
+        public void setT2byte(ArrayList<Byte> t2byte) {
             T2byte = t2byte;
         }
-        public byte[] getT3byte() {
+        public ArrayList<Byte> getT3byte() {
             return T3byte;
         }
-        public void setT3byte(byte[] t3byte) {
+        public void setT3byte(ArrayList<Byte> t3byte) {
             T3byte = t3byte;
         }
         public String getT1() {
@@ -68,12 +69,9 @@ public class TestReceiver {
         }
         @Override
         public String toString() {
-            return "TestReceiver [SKs1=" + SKs1 + ", SKs2=" + SKs2 + ", T1=" + T1 + ", T2byte="
-                    + Arrays.toString(T2byte) + ", T3byte=" + Arrays.toString(T3byte) + ", Ui=" + Ui + ", Vi=" + Vi
-                    + "]";
+            return "TestReceiver [SKs1=" + SKs1 + ", SKs2=" + SKs2 + ", T1=" + T1 + ", T2byte=" + T2byte + ", T3byte="
+                    + T3byte + ", Ui=" + Ui + ", Vi=" + Vi + "]";
         }
-
-
         
-        
+   
  }
