@@ -34,16 +34,20 @@ public class GeneratePrivateKeyController {
             //use pbc wrapper
             PairingFactory.getInstance().setUsePBCWhenPossible(true);
 
-            String su = receiverbody.getSu();
-            String du = receiverbody.getDu();
+            String suString = receiverbody.getSu();
+            String duString = receiverbody.getDu();
 
-            Element Su = pairing.getZr().newElementFromBytes(Base64.decode(su));
-            Element Du = pairing.getG1().newElementFromBytes(Base64.decode(du));
-
+            Element Su = pairing.getZr().newElementFromBytes(Base64.decode(suString));
             Element SKu1 = Su.duplicate();
+            Element Du = pairing.getG1().newElementFromBytes(Base64.decode(duString));
+            // System.out.println(" D u in the private key gnen\n"+Du);
+            
             Element SKu2 = Du.duplicate();
-            SKu2.mulZn(Su);
+            SKu2.mulZn(Su); 
 
+            // System.out.println("secrete keyes");
+            // System.out.println("SKu1 \n"+SKu1);
+            // System.out.println("SKu2 \n"+SKu2);
             String sku1string = Base64.encodeBytes(SKu1.toBytes());;
             String sku2string = Base64.encodeBytes(SKu2.toBytes());;
             long gPriK_End = System.currentTimeMillis();
