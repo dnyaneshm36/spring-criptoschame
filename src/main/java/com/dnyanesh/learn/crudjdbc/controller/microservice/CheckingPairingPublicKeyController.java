@@ -36,7 +36,7 @@ public class CheckingPairingPublicKeyController {
                 PairingFactory.getInstance().setUsePBCWhenPossible(true);
 
                 Element P       = pairing.getG1().newRandomElement();
-                Element PKc     = pairing.getG1().newRandomElement();
+              
 
                 try 
                 {                 // taking q from param
@@ -53,21 +53,24 @@ public class CheckingPairingPublicKeyController {
                         System.out.println("An error occurred.");
                         e.printStackTrace();
                 }
-                try 
-                {                 // taking q from param
-                        File myObj = new File("PKc.txt");
-                        Scanner myReader = new Scanner(myObj);
+                Element master_key_lambda = pairing.getZr().newRandomElement();
+
+                // System.out.println("P is ---- "+P);
+                try {                 // taking q from param
+                File myObj = new File("master_key_lambda.txt");
+                Scanner myReader = new Scanner(myObj);
+        
+                String Pbytestr;
+                Pbytestr = myReader.nextLine();
                 
-                        String Pbytestr;
-                        Pbytestr = myReader.nextLine();
-                        
-                        PKc = pairing.getG1().newElementFromBytes(Base64.decode(Pbytestr));
-                        myReader.close();
+                master_key_lambda = pairing.getZr().newElementFromBytes(Base64.decode(Pbytestr));
+                myReader.close();
+                } catch (FileNotFoundException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
                 } 
-                catch (FileNotFoundException e) {
-                        System.out.println("An error occurred.");
-                        e.printStackTrace();
-                }
+                Element PKc = P.duplicate();
+                PKc.mulZn(master_key_lambda);
 
                 String PKr1string = receiverbody.getPKr1();
                 String PKr2string = receiverbody.getPKr2();
