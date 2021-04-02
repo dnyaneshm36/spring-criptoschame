@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
+import it.unisa.dia.gas.plaf.jpbc.util.io.Base64;
 
 
 
@@ -195,24 +196,38 @@ public class JpbcCheckController {
         //     System.out.println("the we are genpr wrigi in P ");
         //     e.printStackTrace();
         // }
-        // System.out.println("P is ---- "+P);
-        // try {                 // taking q from param
-        //   File myObj = new File("P.txt");
-        //   Scanner myReader = new Scanner(myObj);
+        System.out.println("P is ---- "+P);
+        try {                 // taking q from param
+          File myObj = new File("P.txt");
+          Scanner myReader = new Scanner(myObj);
 
-        //   String Pbytestr;
-        //   Pbytestr = myReader.nextLine();
+          String Pbytestr;
+          Pbytestr = myReader.nextLine();
           
-        //   P = pairing.getG1().newElementFromBytes(Base64.decode(Pbytestr));
-        //   myReader.close();
-        // } catch (FileNotFoundException e) {
-        //   System.out.println("An error occurred.");
-        //   e.printStackTrace();
-        // }
+          P = pairing.getG1().newElementFromBytes(Base64.decode(Pbytestr));
+          myReader.close();
+        } catch (FileNotFoundException e) {
+          System.out.println("An error occurred.");
+          e.printStackTrace();
+        }
         
         // System.out.println("P is --2-- "+P);
 
         Element master_key_lamda = pairing.getZr().newRandomElement();
+        System.out.println("P is ---- "+P);
+        try {                 // taking q from param
+          File myObj = new File("master_key_lambda.txt");
+          Scanner myReader = new Scanner(myObj);
+
+          String Pbytestr;
+          Pbytestr = myReader.nextLine();
+          
+          master_key_lamda = pairing.getZr().newElementFromBytes(Base64.decode(Pbytestr));
+          myReader.close();
+        } catch (FileNotFoundException e) {
+          System.out.println("An error occurred.");
+          e.printStackTrace();
+        }        
         Element PKc = P.duplicate();
         PKc.mulZn(master_key_lamda);
         Element SKs = master_key_lamda.duplicate();
@@ -234,6 +249,19 @@ public class JpbcCheckController {
         sender = new ClientKey(senderId,Qus , Dus);
         
         Element Sus = pairing.getZr().newRandomElement(); //clent id
+        // try {                 // taking q from param
+        //   File myObj = new File("Sendersu.txt");
+        //   Scanner myReader = new Scanner(myObj);
+
+        //   String Pbytestr;
+        //   Pbytestr = myReader.nextLine();
+          
+        //   Sus = pairing.getZr().newElementFromBytes(Base64.decode(Pbytestr));
+        //   myReader.close();
+        // } catch (FileNotFoundException e) {
+        //   System.out.println("An error occurred.");
+        //   e.printStackTrace();
+        // }
         Element SKu1s = Sus.duplicate();
         Element SKu2s = Dus.duplicate();
         SKu2s.mulZn(Sus);   
@@ -261,6 +289,20 @@ public class JpbcCheckController {
         receiver = new ClientKey(receiverId, Qur, Dur);
 
         Element Sur = pairing.getZr().newRandomElement();    //client secrete.
+        // try {                 // taking q from param
+        //   File myObj = new File("receiversu.txt");
+        //   Scanner myReader = new Scanner(myObj);
+
+        //   String Pbytestr;
+        //   Pbytestr = myReader.nextLine();
+          
+        //   Sur = pairing.getZr().newElementFromBytes(Base64.decode(Pbytestr));
+        //   myReader.close();
+        // } catch (FileNotFoundException e) {
+        //   System.out.println("An error occurred.");
+        //   e.printStackTrace();
+        // }
+
         Element SKu1r = Sur.duplicate();
         Element SKu2r = Dur.duplicate();
         SKu2r.mulZn(Sur);
@@ -386,7 +428,8 @@ public class JpbcCheckController {
           Element lambdaPKs = sender.getPKu1().duplicate() ;
         //   System.out.println("lamsdf  H2wSKR  t2 -dash-"+H2wSKR);
           lambdaPKs.mulZn(r.getMaster_key_lamda());
-        //  System.out.println("lamsdf  2 "+lambdaPKs);
+
+          //  System.out.println("lamsdf  ing jpb deomo 2 "+lambdaPKs);
           byte [] H2wSKRByte = H2wSKR.toBytes();
         //   Element e = pairing.getG1().newElement();
         //   int bythread = e.setFromBytes(H2wSKRByte);
@@ -394,6 +437,10 @@ public class JpbcCheckController {
         //   System.out.println("H2wSKR--- "+H2wSKR);
           byte [] lambdaPKsByte = lambdaPKs.toBytes();
           int lenFinal = Math.max(H2wSKRByte.length, lambdaPKsByte.length);
+              // for( int i = 0 ; i< lenFinal; i++)
+              //   {
+              //       System.out.println(i+" ----------    111111 8888888    "+H2wSKRByte[i]+" ------ "+lambdaPKsByte[i]);
+              //   }
           byte[] T2bytexor = new byte[lenFinal];
           for( int  i = 0 ; i < lenFinal ; i++ )
           {
@@ -457,9 +504,9 @@ public class JpbcCheckController {
               int ans = ( xint ^ yint );
               T2dashintobyte[i] = (byte) ans;
               
-              // if(H2wSKRByte[i]!=T2dashbyte[i])
+              // if(H2wSKRByte[i]!=T2bytexor[i])
               //   {
-              //     System.out.println(i+"   this    "+T2dashbyte[i]+"   --==--   "+T2byte[i]+"   ^   "+SKsT1byte[i] +"  ---  "+H2wSKRByte[i]);
+              //     System.out.println(i+"   this    "+T2dashintobyte[i]+"   --==--   "+T2byte[i]+"   ^   "+SKsT1byte[i] +"  ---  "+H2wSKRByte[i]);
               //   }
           }
 
@@ -473,9 +520,9 @@ public class JpbcCheckController {
               int yint = y;
               int ans = ( xint ^ yint );
               T3dashintobyte[i] = (byte) ans;
-                // if(hash3WordByte[i]!=T3dashbyte[i])
+                // if(hash3WordByte[i]!=T3byte[i])
                 // {
-                //   System.out.println(i+"   1111    "+T3dashbyte[i]+"   --==--   "+T3byte[i]+"   ^   "+SKsT1byte[i] +"  ---  "+hash3WordByte[i]);
+                //   System.out.println(i+"   1111    "+T3dashintobyte[i]+"   --==--   "+T3byte[i]+"   ^   "+SKsT1byte[i] +"  ---  "+hash3WordByte[i]);
                 // }
           }
           // if you comment bellow fourlines uncommment  t2dash line then it run perfect
