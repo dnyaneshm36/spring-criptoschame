@@ -126,7 +126,10 @@ public class clpeksController {
 
                     long clpeks_Start = System.currentTimeMillis();
                     //Implamenting the pairing   
+                            //Implamenting the pairing   
                     Pairing pairing = PairingFactory.getPairing("params1.txt"); 
+                    //use pbc wrapper
+                    PairingFactory.getInstance().setUsePBCWhenPossible(true);
                     //use pbc wrapper
 
 
