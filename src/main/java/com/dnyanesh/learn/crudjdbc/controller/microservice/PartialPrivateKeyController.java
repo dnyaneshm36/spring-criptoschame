@@ -95,12 +95,12 @@ public class PartialPrivateKeyController {
                     e.printStackTrace();
                 }
 
-            byte [] identifierByte = identifierString.getBytes();
+            
 
-            Element Qu = pairing.getG1().newElement().setFromHash(identifierByte, 0, identifierByte.length);
+            Element Qu = hash1(identifierString, pairing).duplicate();
             Element Du = Qu.duplicate();
             Du.mulZn(master_key_lambda);
-            
+            // System.out.println(" Du inn the g epppk \n"+Du);
             String Qustring = Base64.encodeBytes(Qu.toBytes());
             String Dustring = Base64.encodeBytes(Du.toBytes());
             long ePPK_End = System.currentTimeMillis();
