@@ -7,11 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
+import com.dnyanesh.learn.crudjdbc.model.microservice.receiverobject.GeneratePublicKeyReceiver;
 import com.dnyanesh.learn.crudjdbc.model.microservice.senderobject.GeneratePublicKey;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,8 +27,10 @@ import it.unisa.dia.gas.plaf.jpbc.util.io.Base64;
 @RequestMapping("/microservice/clpeks")
 public class GeneratePublicKeyController {
 
-    @GetMapping(value = "/gPubK/{su}",  produces = "application/json")
-    public ResponseEntity<GeneratePublicKey> GeneratePublickey ( @PathVariable(value = "su") String sustring ) throws IOException {
+    @GetMapping(value = "/gPubK",  
+    consumes = {MediaType.APPLICATION_JSON_VALUE },
+    produces = {MediaType.APPLICATION_JSON_VALUE }  )
+    public ResponseEntity<GeneratePublicKey> GeneratePublickey ( @RequestBody GeneratePublicKeyReceiver receiverbody  ) throws IOException {
     
             long gPubK_Start = System.currentTimeMillis();
             //Implamenting the pairing   
@@ -72,7 +76,7 @@ public class GeneratePublicKeyController {
             }
             Element PKu1 = P.duplicate();
             Element PKu2 = PKc.duplicate();
-
+            String sustring = receiverbody.getSu();
             Element Su = pairing.getG1().newElementFromBytes(Base64.decode(sustring));
             
             PKu1.mulZn(Su);
