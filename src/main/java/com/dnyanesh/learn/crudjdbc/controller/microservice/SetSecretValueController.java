@@ -26,7 +26,7 @@ public class SetSecretValueController {
                 String DescribeString = "this Encripted element of given client secrete { identifier } ";
                 PairingFactory.getInstance().setUsePBCWhenPossible(true);
 
-                Element Su = pairing.getG1().newRandomElement();
+                Element Su = pairing.getZr().newRandomElement();
                 String Sustring = Base64.encodeBytes(Su.toBytes());
                 long Su_End = System.currentTimeMillis();
 
