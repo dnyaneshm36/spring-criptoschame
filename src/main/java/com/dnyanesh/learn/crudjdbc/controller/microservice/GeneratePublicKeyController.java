@@ -57,30 +57,36 @@ public class GeneratePublicKeyController {
                 e.printStackTrace();
             }
 
-            Element PKc = pairing.getG1().newRandomElement();
+            Element master_key_lambda = pairing.getZr().newRandomElement();
 
-            try 
-            {                 // taking q from param
-                File myObj = new File("PKc.txt");
-                Scanner myReader = new Scanner(myObj);
-        
-                String Pbytestr;
-                Pbytestr = myReader.nextLine();
-                
-                PKc = pairing.getG1().newElementFromBytes(Base64.decode(Pbytestr));
-                myReader.close();
+            // System.out.println("P is ---- "+P);
+            try {                 // taking q from param
+              File myObj = new File("master_key_lambda.txt");
+              Scanner myReader = new Scanner(myObj);
+    
+              String Pbytestr;
+              Pbytestr = myReader.nextLine();
+              
+              master_key_lambda = pairing.getZr().newElementFromBytes(Base64.decode(Pbytestr));
+              myReader.close();
+            } catch (FileNotFoundException e) {
+              System.out.println("An error occurred.");
+              e.printStackTrace();
             } 
-            catch (FileNotFoundException e) {
-                System.out.println("An error occurred.");
-                e.printStackTrace();
-            }
+            Element PKc = P.duplicate();
+            PKc.mulZn(master_key_lambda);
             Element PKu1 = P.duplicate();
             Element PKu2 = PKc.duplicate();
             String sustring = receiverbody.getSu();
-            Element Su = pairing.getG1().newElementFromBytes(Base64.decode(sustring));
+            Element Su = pairing.getZr().newElementFromBytes(Base64.decode(sustring));
             
             PKu1.mulZn(Su);
             PKu2.mulZn(Su);
+            // System.out.println("pubclic  keyes");
+            // System.out.println("PKu1 \n"+PKu1);
+            // System.out.println("PKu2 \n"+PKu2);
+
+
             String pku1string = Base64.encodeBytes(PKu1.toBytes());;
             String pku2string = Base64.encodeBytes(PKu2.toBytes());;
             long gPubK_End = System.currentTimeMillis();
