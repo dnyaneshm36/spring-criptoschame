@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 import com.dnyanesh.learn.crudjdbc.model.microservice.receiverobject.TrapdoorReciever;
 import com.dnyanesh.learn.crudjdbc.model.microservice.senderobject.TrapdoorSender;
@@ -174,6 +175,7 @@ public class TrapdoorController {
             Element PKs1                = pairing.getG1().newElementFromBytes(Base64.decode(pKs1String));
             Element SKr2                = pairing.getG1().newElementFromBytes(Base64.decode(sKr2String));
 
+
                 String data = "";
                 
                 try {                 // taking q from param
@@ -202,7 +204,8 @@ public class TrapdoorController {
                 Element lambdaPKs = PKs1.duplicate() ;
                 //   System.out.println("lamsdf  H2wSKR  t2 -dash-"+H2wSKR);
                 lambdaPKs.mulZn(master_key_lambda);
-                //  System.out.println("lamsdf  2 "+lambdaPKs);
+
+                //  System.out.println("lamsdf in trapdoor api 2 "+lambdaPKs);
                 byte [] H2wSKRByte = H2wSKR.toBytes();
                 //   Element e = pairing.getG1().newElement();
                 //   int bythread = e.setFromBytes(H2wSKRByte);
@@ -210,6 +213,10 @@ public class TrapdoorController {
                 //   System.out.println("H2wSKR--- "+H2wSKR);
                 byte [] lambdaPKsByte = lambdaPKs.toBytes();
                 int lenFinal = Math.max(H2wSKRByte.length, lambdaPKsByte.length);
+                // for( int i = 0 ; i< lenFinal; i++)
+                // {
+                //     System.out.println(i+" ----------    111111 tradroo api    "+H2wSKRByte[i]+" ------ "+lambdaPKsByte[i]);
+                // }
                 byte[] T2bytexor = new byte[lenFinal];
                 for( int  i = 0 ; i < lenFinal ; i++ )
                 {
@@ -247,13 +254,22 @@ public class TrapdoorController {
             String t2string = Base64.encodeBytes(T2.toBytes());
             String t3string = Base64.encodeBytes(T3.toBytes());
 
-
+            ArrayList<Byte> T2bytelist = new ArrayList<>();
+            for (byte B : T2bytexor)
+            {
+                T2bytelist.add(B);
+            }
+            ArrayList<Byte> T3bytelist = new ArrayList<>();
+            for (byte B : T3bytexor)
+            {
+                T3bytelist.add(B);
+            }
             long Trapdoor_End = System.currentTimeMillis();
 
             long time = Trapdoor_End - Trapdoor_Start;
 
-
-            TrapdoorSender trapdoorword = new TrapdoorSender(t1string,t2string,t3string,T2bytexor,T3bytexor,time);
+             
+            TrapdoorSender trapdoorword = new TrapdoorSender(t1string,t2string,t3string,T2bytelist,T3bytelist,time);
 
             return ResponseEntity.ok().body(trapdoorword);
             }
