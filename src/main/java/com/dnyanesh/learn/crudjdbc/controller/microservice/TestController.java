@@ -3,6 +3,7 @@ package com.dnyanesh.learn.crudjdbc.controller.microservice;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 import com.dnyanesh.learn.crudjdbc.model.microservice.receiverobject.TestReceiver;
 import com.dnyanesh.learn.crudjdbc.model.microservice.senderobject.TestSender;
@@ -31,7 +32,7 @@ public class TestController {
                     BigInteger G2pairbiginterger = new BigInteger(G2pairbyte);
                     return G2pairbiginterger;
               }
-            @GetMapping(value = "/test/",  
+            @GetMapping(value = "/test",  
             consumes = {MediaType.APPLICATION_JSON_VALUE },
             produces = {MediaType.APPLICATION_JSON_VALUE }  )
             public ResponseEntity<TestSender> GeneratePrivatekey ( @RequestBody TestReceiver receiverbody ) throws IOException {
@@ -42,8 +43,21 @@ public class TestController {
                         //use pbc wrapper
                         PairingFactory.getInstance().setUsePBCWhenPossible(true);
 
-                byte [] T2byte                                = receiverbody.getT2byte();           
-                byte [] T3byte                                = receiverbody.getT3byte();
+                ArrayList<Byte> T2bytelist                                = receiverbody.getT2byte();           
+                ArrayList<Byte> T3bytelist                                = receiverbody.getT3byte();
+
+                byte [] T2byte = new byte[T2bytelist.size()];
+                int k = 0;
+                for (Byte b : T2bytelist) {
+                    T2byte[k] = b;
+                    k++;
+                }
+                byte [] T3byte = new byte[T3bytelist.size()];
+                k = 0;
+                for (Byte b : T3bytelist) {
+                    T3byte[k] = b;
+                    k++;
+                }
                 String t1String                               = receiverbody.getT1();
                 String sKs1String                             = receiverbody.getSKs1();
                 String sKs2String                             = receiverbody.getSKs2();
@@ -52,7 +66,7 @@ public class TestController {
                 String uiString                               = receiverbody.getUi();
 
                 Element T1                  = pairing.getG1().newElementFromBytes(Base64.decode(t1String));
-                Element SKs1                = pairing.getG1().newElementFromBytes(Base64.decode(sKs1String));
+                Element SKs1                = pairing.getZr().newElementFromBytes(Base64.decode(sKs1String));
                 Element Sks2                = pairing.getG1().newElementFromBytes(Base64.decode(sKs2String));
 
                 Element Ui                  = pairing.getG1().newElementFromBytes(Base64.decode(uiString));
@@ -60,6 +74,7 @@ public class TestController {
                 Element SKsT1 = T1.duplicate();
                 SKsT1.mulZn(SKs1);
                 byte [] SKsT1byte = SKsT1.toBytes();
+
                 // byte [] T2byte = wordSearch.getT2().toBytes();
                 // byte [] T3byte = wordSearch.getT3().toBytes();
 
@@ -79,10 +94,10 @@ public class TestController {
                     int ans = ( xint ^ yint );
                     T2dashintobyte[i] = (byte) ans;
                     
-                    // if(H2wSKRByte[i]!=T2dashbyte[i])
-                    //   {
-                    //     System.out.println(i+"   this    "+T2dashbyte[i]+"   --==--   "+T2byte[i]+"   ^   "+SKsT1byte[i] +"  ---  "+H2wSKRByte[i]);
-                    //   }
+                    // if(H2wSKRByte[i]!=T2byte[i])
+                      // {
+                      //   System.out.println(i+"   this    "+T2dashintobyte[i]+"   --==--   "+T2byte[i]+"   ^   "+SKsT1byte[i] +"  ---  ");
+                      // }
                 }
       
                 lenFinal = Math.max(T3byte.length, SKsT1byte.length);
@@ -97,7 +112,7 @@ public class TestController {
                     T3dashintobyte[i] = (byte) ans;
                       // if(hash3WordByte[i]!=T3dashbyte[i])
                       // {
-                      //   System.out.println(i+"   1111    "+T3dashbyte[i]+"   --==--   "+T3byte[i]+"   ^   "+SKsT1byte[i] +"  ---  "+hash3WordByte[i]);
+                      //   System.out.println(i+"   1111    "+T3dashintobyte[i]+"   --==--   "+T3byte[i]+"   ^   "+SKsT1byte[i] +" ");
                       // }
                 }
                 // if you comment bellow fourlines uncommment  t2dash line then it run perfect
