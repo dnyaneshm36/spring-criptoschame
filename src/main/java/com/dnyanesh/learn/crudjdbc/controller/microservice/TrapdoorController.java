@@ -26,7 +26,6 @@ import it.unisa.dia.gas.plaf.jpbc.util.io.Base64;
 
 @RestController
 @RequestMapping("/microservice/clpeks")
-
 public class TrapdoorController {
 
                 public static byte[] getSHA(String input) throws NoSuchAlgorithmException
