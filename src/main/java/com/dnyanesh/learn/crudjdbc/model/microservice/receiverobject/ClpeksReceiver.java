@@ -1,14 +1,16 @@
 package com.dnyanesh.learn.crudjdbc.model.microservice.receiverobject;
 
+import java.util.ArrayList;
+
 public class ClpeksReceiver {
         
-        String word;
+        ArrayList<String> words;
         String Qs;
         String Qr;
         String PKs2;
         String PKr2;
-        public ClpeksReceiver(String word, String qs, String qr, String pKs2, String pKr2) {
-            this.word = word;
+        public ClpeksReceiver(ArrayList<String> words, String qs, String qr, String pKs2, String pKr2) {
+            this.words = words;
             Qs = qs;
             Qr = qr;
             PKs2 = pKs2;
@@ -16,11 +18,11 @@ public class ClpeksReceiver {
         }
         public ClpeksReceiver() {
         }
-        public String getWord() {
-            return word;
+        public ArrayList<String> getWords() {
+            return words;
         }
-        public void setWord(String word) {
-            this.word = word;
+        public void setWords(ArrayList<String> words) {
+            this.words = words;
         }
         public String getQs() {
             return Qs;
@@ -48,8 +50,9 @@ public class ClpeksReceiver {
         }
         @Override
         public String toString() {
-            return "ClpeksReceiver [PKr2=" + PKr2 + ", PKs2=" + PKs2 + ", Qr=" + Qr + ", Qs=" + Qs + ", word=" + word
+            return "ClpeksReceiver [PKr2=" + PKr2 + ", PKs2=" + PKs2 + ", Qr=" + Qr + ", Qs=" + Qs + ", words=" + words
                     + "]";
         }
+        
         
 }
