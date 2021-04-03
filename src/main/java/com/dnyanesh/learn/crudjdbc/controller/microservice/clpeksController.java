@@ -8,13 +8,13 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.dnyanesh.learn.crudjdbc.model.microservice.receiverobject.ClpeksReceiver;
 import com.dnyanesh.learn.crudjdbc.model.microservice.senderobject.ClpeksSender;
 
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -122,52 +122,44 @@ public class clpeksController {
                 @GetMapping(value = "/encript",  
                 consumes = {MediaType.APPLICATION_JSON_VALUE },
                 produces = {MediaType.APPLICATION_JSON_VALUE }  )
-                public ResponseEntity<ClpeksSender> GeneratePrivatekey ( @RequestBody ClpeksReceiver receiverbody ) throws IOException {
+                public ArrayList<ClpeksSender> GeneratePrivatekey ( @RequestBody ClpeksReceiver receiverbody ) throws IOException {
 
-                    long clpeks_Start = System.currentTimeMillis();
-                    //Implamenting the pairing   
-                            //Implamenting the pairing   
-                    Pairing pairing = PairingFactory.getPairing("params1.txt"); 
-                    //use pbc wrapper
-                    PairingFactory.getInstance().setUsePBCWhenPossible(true);
-                    //use pbc wrapper
+                  ArrayList<ClpeksSender> encriptedwords      = new ArrayList<ClpeksSender>();
 
+                  ArrayList<String> words                     = receiverbody.getWords();
+                  String Qsstring                             = receiverbody.getQs();           
+                  String Qrstring                             = receiverbody.getQr();
+                  String PKs2string                           = receiverbody.getPKs2();
+                  String PKr2string                           = receiverbody.getPKr2();
+                  Pairing pairing = PairingFactory.getPairing("params1.txt"); 
+                  //use pbc wrapper
+                  PairingFactory.getInstance().setUsePBCWhenPossible(true);
+                  //use pbc wrapper
 
-                    Element P       = pairing.getG1().newRandomElement();
-    
-                    try 
-                    {                 // taking q from param
-                            File myObj = new File("P.txt");
-                            Scanner myReader = new Scanner(myObj);
-                    
-                            String Pbytestr;
-                            Pbytestr = myReader.nextLine();
-                            
-                            P = pairing.getG1().newElementFromBytes(Base64.decode(Pbytestr));
-                            myReader.close();
-                    } 
-                    catch (FileNotFoundException e) {
-                            System.out.println("An error occurred.");
-                            e.printStackTrace();
-                    }
+                  Element Qr                  = pairing.getG1().newElementFromBytes(Base64.decode(Qrstring));
+                  Element Qs                  = pairing.getG1().newElementFromBytes(Base64.decode(Qsstring));
+                  Element PKs2                = pairing.getG1().newElementFromBytes(Base64.decode(PKs2string));
+                  Element PKr2                = pairing.getG1().newElementFromBytes(Base64.decode(PKr2string));
+                 
+                  Element P                   = pairing.getG1().newRandomElement();
+  
+                  try 
+                  {                 // taking q from param
+                          File myObj = new File("P.txt");
+                          Scanner myReader = new Scanner(myObj);
+                  
+                          String Pbytestr;
+                          Pbytestr = myReader.nextLine();
+                          
+                          P = pairing.getG1().newElementFromBytes(Base64.decode(Pbytestr));
+                          myReader.close();
+                  } 
+                  catch (FileNotFoundException e) {
+                          System.out.println("An error occurred.");
+                          e.printStackTrace();
+                  }
 
-
-
-                    String word                                 = receiverbody.getWord();
-                    String Qsstring                             = receiverbody.getQs();           
-                    String Qrstring                             = receiverbody.getQr();
-                    String PKs2string                           = receiverbody.getPKs2();
-                    String PKr2string                           = receiverbody.getPKr2();
-                    Element Qr                  = pairing.getG1().newElementFromBytes(Base64.decode(Qrstring));
-                    Element Qs                  = pairing.getG1().newElementFromBytes(Base64.decode(Qsstring));
-                    Element PKs2                = pairing.getG1().newElementFromBytes(Base64.decode(PKs2string));
-                    Element PKr2                = pairing.getG1().newElementFromBytes(Base64.decode(PKr2string));
-
-                    Element Ri;
-                    Ri = pairing.getZr().newRandomElement();
-            
-                    
-                    String data = "";
+                  String data = "";
             
                     try {                 // taking q from param
                         File myObj = new File("params1.txt");
@@ -183,8 +175,21 @@ public class clpeksController {
                         System.out.println("An error occurred.");
                         e.printStackTrace();
                       }
+
                       String str = data;
                       BigInteger q = new BigInteger(str);
+
+                  for( String word: words)
+                  {
+
+
+                      long clpeks_Start = System.currentTimeMillis();
+                      //Implamenting the pairing   
+                              //Implamenting the pairing   
+
+                      Element Ri;
+                      Ri = pairing.getZr().newRandomElement();
+            
                       BigInteger rethash = hash2_asscii(word, q);
                       Element hash = pairing.getZr().newElement(rethash);
                       Element first = Qr.duplicate();
@@ -212,15 +217,13 @@ public class clpeksController {
                       String Uistring = Base64.encodeBytes(Ui.toBytes());
 
 
+                      long Clpeks_End = System.currentTimeMillis();
 
-
-                    long Clpeks_End = System.currentTimeMillis();
-
-                    long time = Clpeks_End - clpeks_Start;
-            
-
-                    ClpeksSender encriptedword = new ClpeksSender(Uistring,Vi,time);
-                    
-            return ResponseEntity.ok().body(encriptedword);
+                      long time = Clpeks_End - clpeks_Start;
+              
+                      ClpeksSender encriptedword = new ClpeksSender(Uistring,Vi,time);
+                      encriptedwords.add(encriptedword);
+                  }     
+            return encriptedwords;
         }
 }
