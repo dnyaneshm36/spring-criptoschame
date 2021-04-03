@@ -13,13 +13,13 @@ result = 0
 LOCALHOST = "http://localhost:8080/"
 CYTOPTO_HEROKU = "https://criptography-dnyanesh.herokuapp.com/"
 
-ENDPOINT = CYTOPTO_HEROKU
+ENDPOINT = LOCALHOST
 headers = {
      "Content-Type": "application/json"
 }
 
 
-for i in range(10):
+for i in range(1):
     Requestdata = ""
     r = requests.get(ENDPOINT+"microservice/clpeks/setup",data=json.dumps(Requestdata),headers= headers)
     print(r)
@@ -153,10 +153,19 @@ for i in range(10):
 
     # word = "wordto_encrption"
     N =random.randint(0,19)
-    word = ''.join(random.choices(string.ascii_uppercase +
+    word1 = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k = N))
+    N =random.randint(0,19)
+    word2 = ''.join(random.choices(string.ascii_uppercase +
+                             string.digits, k = N))
+    N =random.randint(0,19)
+    word3 = ''.join(random.choices(string.ascii_uppercase +
+                             string.digits, k = N))
+    
+    words = [word1,word2,word3]
+    print("word s --- ",words)
     Requestdata={
-    "word": word,
+    "words": words,
     "pkr2": PKr2,
     "qs": Qs,
     "qr": Qr,
@@ -167,16 +176,14 @@ for i in range(10):
     Responddata = r.json()
     print(Responddata)
 
-    Ui = Responddata["ui"]
-    Vi = Responddata["vi"]
-    print("big int------- ",Vi)
+    encypteWords = Responddata
 
     Requestdata={
     "skr2": SKr2,
     "pks1": PKs1
     }
 
-    wordchecking = word
+    wordchecking = word2
 
     r = requests.get(ENDPOINT+"microservice/clpeks/trapdoor/"+wordchecking,data=json.dumps(Requestdata),headers= headers)
     print(r)
@@ -190,8 +197,7 @@ for i in range(10):
 
     Requestdata={
     "t1": T1,
-    "ui": Ui,
-    "vi": Vi,
+     "encypteWords": encypteWords,
     "t2byte": T2byte,
     "t3byte": T3byte,
     "sks1": SKs1,
@@ -204,10 +210,15 @@ for i in range(10):
     print(r)
     Responddata = r.json()
     print(Responddata)
-    if Responddata['test']:
-        result+=1
+    
+    index = 0;
+    for Test in Responddata:
+        index += 1
+        if Test['test']:
+            result+=1
+            print("succefully find  at ",index)
 
-print("seccesful",result)
+# print("seccesful",result)
 
 
 stop = timeit.default_timer()
