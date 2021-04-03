@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
+import com.dnyanesh.learn.crudjdbc.model.microservice.receiverobject.CipherWordReceiver;
 import com.dnyanesh.learn.crudjdbc.model.microservice.receiverobject.TestReceiver;
 import com.dnyanesh.learn.crudjdbc.model.microservice.senderobject.TestSender;
 
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,9 +35,9 @@ public class TestController {
             @GetMapping(value = "/test",  
             consumes = {MediaType.APPLICATION_JSON_VALUE },
             produces = {MediaType.APPLICATION_JSON_VALUE }  )
-            public ResponseEntity<TestSender> GeneratePrivatekey ( @RequestBody TestReceiver receiverbody ) throws IOException {
+            public ArrayList<TestSender> GeneratePrivatekey ( @RequestBody TestReceiver receiverbody ) throws IOException {
 
-                long Test_Start = System.currentTimeMillis();
+              ArrayList<TestSender> TestsResults = new ArrayList<>();
                         //Implamenting the pairing   
                         Pairing pairing = PairingFactory.getPairing("params1.txt"); 
                         //use pbc wrapper
@@ -61,15 +61,13 @@ public class TestController {
                 String t1String                               = receiverbody.getT1();
                 String sKs1String                             = receiverbody.getSKs1();
                 String sKs2String                             = receiverbody.getSKs2();
-                
-                BigInteger Vi                                 = receiverbody.getVi();
-                String uiString                               = receiverbody.getUi();
+
+                ArrayList <CipherWordReceiver> encypteWords           = receiverbody.getEncypteWords();
 
                 Element T1                  = pairing.getG1().newElementFromBytes(Base64.decode(t1String));
                 Element SKs1                = pairing.getZr().newElementFromBytes(Base64.decode(sKs1String));
                 Element Sks2                = pairing.getG1().newElementFromBytes(Base64.decode(sKs2String));
 
-                Element Ui                  = pairing.getG1().newElementFromBytes(Base64.decode(uiString));
 
                 Element SKsT1 = T1.duplicate();
                 SKsT1.mulZn(SKs1);
@@ -134,67 +132,84 @@ public class TestController {
               //   System.out.println("firstElementPair  1  "+firstElementPair);
                 firstElementPair.add(T3dash);
               //   System.out.println("firstElementPair 2  "+firstElementPair);
-                Element hash4pair =  pairing.pairing(firstElementPair, Ui);
-        
-                BigInteger hash4pairbig = hash4(hash4pair);
 
-      
-                // System.out.println("------------------H2wSKRByte-----------------"+H2wSKRByte.length);
-                // for(int i=0; i< H2wSKRByte.length ; i++) {
-                //   System.out.print(H2wSKRByte[i] +" ");
-                // }
-                // System.out.println("\n------------------lambdaPKsByte-----------------"+lambdaPKsByte.length);
-                // for(int i=0; i< lambdaPKsByte.length ; i++) {
-                //   System.out.print(lambdaPKsByte[i] +" ");
-                // }
-                // System.out.println("\n------------------T2bytexor-----------------"+T2bytexor.length);
-                // for(int i=0; i< T2bytexor.length ; i++) {
-                //   System.out.print(T2bytexor[i] +" ");
-                // }
-                
-                // System.out.println("\n------------------T2dashintobyte-----------------"+T2dashintobyte.length);
-                // for(int i=0; i< T2dashintobyte.length ; i++) {
-                //   System.out.print(T2dashintobyte[i] +" ");
-                // }
-                // System.out.println("\n------------------hash3WordByte-----------------"+hash3WordByte.length);
-                // for(int i=0; i< hash3WordByte.length ; i++) {
-                //   System.out.print(hash3WordByte[i] +" ");
-                // }
-                // System.out.println("\n------------------SKsT1byte-----------------"+SKsT1byte.length);
-                // for(int i=0; i< SKsT1byte.length ; i++) {
-                //   System.out.print(SKsT1byte[i] +" ");
-                // }
-                // System.out.println("\n------------------T3bytexor-----------------"+T3bytexor.length);
-                // for(int i=0; i< T3bytexor.length ; i++) {
-                //   System.out.print(T3bytexor[i] +" ");
-                // }
-                // System.out.println("\n------------------T3dashintobyte-----------------"+T3dashintobyte.length);
-                // for(int i=0; i< T3dashintobyte.length ; i++) {
-                //   System.out.print(T3dashintobyte[i] +" ");
-                // }
-      
-                String descriptString = "";
-                boolean Test = false;
-                if( hash4pairbig.equals(Vi) )
-                { 
-                    Test = true;
-                    System.out.println("\nYes !!! \nsuccessfully  find the word\n");
-                    descriptString+="\nYes !!! \nsuccessfully  find the word\n";
-                }
-                else
-                {
-                      Test = false;
-                      System.out.println("\n oh No oh NO oh No !!! \nsuccessfully didn't find  the word\n");
-                      descriptString+="\n oh No oh NO oh No !!! \nsuccessfully didn't find  the word\n";
-                }
-                System.out.println(" hash4pairbig  q--- "+hash4pairbig);
-                System.out.println("cipherword.getVi()--- "+ Vi);
-                
 
+              for ( CipherWordReceiver encryptedword : encypteWords)
+              {
+                        long Test_Start = System.currentTimeMillis();
+
+                        
+                        BigInteger Vi           = encryptedword.getVi();
+                        String uiString         = encryptedword.getUi();                    
+
+                        Element Ui                  = pairing.getG1().newElementFromBytes(Base64.decode(uiString));
+
+                        Element hash4pair =  pairing.pairing(firstElementPair, Ui);
                 
-                long Test_End = System.currentTimeMillis();
-                long time = Test_End - Test_Start;
-                TestSender test = new TestSender(Test,descriptString,time);
-                 return ResponseEntity.ok().body(test);
+                        BigInteger hash4pairbig = hash4(hash4pair);
+
+              
+                        // System.out.println("------------------H2wSKRByte-----------------"+H2wSKRByte.length);
+                        // for(int i=0; i< H2wSKRByte.length ; i++) {
+                        //   System.out.print(H2wSKRByte[i] +" ");
+                        // }
+                        // System.out.println("\n------------------lambdaPKsByte-----------------"+lambdaPKsByte.length);
+                        // for(int i=0; i< lambdaPKsByte.length ; i++) {
+                        //   System.out.print(lambdaPKsByte[i] +" ");
+                        // }
+                        // System.out.println("\n------------------T2bytexor-----------------"+T2bytexor.length);
+                        // for(int i=0; i< T2bytexor.length ; i++) {
+                        //   System.out.print(T2bytexor[i] +" ");
+                        // }
+                        
+                        // System.out.println("\n------------------T2dashintobyte-----------------"+T2dashintobyte.length);
+                        // for(int i=0; i< T2dashintobyte.length ; i++) {
+                        //   System.out.print(T2dashintobyte[i] +" ");
+                        // }
+                        // System.out.println("\n------------------hash3WordByte-----------------"+hash3WordByte.length);
+                        // for(int i=0; i< hash3WordByte.length ; i++) {
+                        //   System.out.print(hash3WordByte[i] +" ");
+                        // }
+                        // System.out.println("\n------------------SKsT1byte-----------------"+SKsT1byte.length);
+                        // for(int i=0; i< SKsT1byte.length ; i++) {
+                        //   System.out.print(SKsT1byte[i] +" ");
+                        // }
+                        // System.out.println("\n------------------T3bytexor-----------------"+T3bytexor.length);
+                        // for(int i=0; i< T3bytexor.length ; i++) {
+                        //   System.out.print(T3bytexor[i] +" ");
+                        // }
+                        // System.out.println("\n------------------T3dashintobyte-----------------"+T3dashintobyte.length);
+                        // for(int i=0; i< T3dashintobyte.length ; i++) {
+                        //   System.out.print(T3dashintobyte[i] +" ");
+                        // }
+              
+                        String descriptString = "";
+                        boolean Test = false;
+                        if( hash4pairbig.equals(Vi) )
+                        { 
+                            Test = true;
+                            System.out.println("\nYes !!! \nsuccessfully  find the word\n");
+                            descriptString+="\nYes !!! \nsuccessfully  find the word\n";
+                        }
+                        else
+                        {
+                              Test = false;
+                              System.out.println("\n oh No oh NO oh No !!! \nsuccessfully didn't find  the word\n");
+                              descriptString+="\n oh No oh NO oh No !!! \nsuccessfully didn't find  the word\n";
+                        }
+                        System.out.println(" hash4pairbig  q--- "+hash4pairbig);
+                        System.out.println("cipherword.getVi()--- "+ Vi);
+                        
+
+                        
+                        long Test_End = System.currentTimeMillis();
+                        long time = Test_End - Test_Start;
+                        TestSender test = new TestSender(Test,descriptString,time);
+
+                        TestsResults.add(test);
+
+                }
+
+                 return TestsResults;
             }
 }
